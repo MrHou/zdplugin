@@ -15,6 +15,8 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import zendesk.chat.*
 import zendesk.configurations.Configuration
 import zendesk.core.AnonymousIdentity
+import zendesk.core.Identity
+import zendesk.core.JwtIdentity
 import zendesk.core.Zendesk
 import zendesk.messaging.MessagingActivity
 import zendesk.support.Support
@@ -73,6 +75,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 if (TextUtils.isEmpty(accountKey)) {
                     result.error("ACCOUNT_KEY_NULL", "AccountKey is null !", "AccountKey is null !")
                 }
+
                 //1.Zendes SDK
                 Zendesk.INSTANCE.init(activity,
                         zendeskUrl,
@@ -80,15 +83,23 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                         clientId)
                 //2.Support SDK init
                 Support.INSTANCE.init(Zendesk.INSTANCE)
+
                 //3.setIdentity
-                Zendesk.INSTANCE.setIdentity(
-                        AnonymousIdentity.Builder()
-                                .withNameIdentifier(nameIdentifier)
-                                .withEmailIdentifier(emailIdentifier)
-                                .build()
-                )
+
+                val testToken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzgyMDg1MzEsImp0aSI6IjcxMjdjZWY3LWY3ZTktNDQ0Ny1hMjRlLTI3YmU1N2NhMzliZCIsImVtYWlsIjoidGVzdHRlc3RAdGVzdC5jb20iLCJuYW1lIjoiRCBEaWFjbmtvIiwiZXh0ZXJuYWxfaWQiOiI5OGJjNTE5ZS05ZWFmLTRkNzAtYmVkOS1lNjY4OTk2NTNlOGYiLCJwaG9uZSI6IisxMzEyMzEyMzEyMyIsInJvbGUiOiJhZG1pbiIsInVzZXJfZmllbGRzIjp7InByaW1hcnlfam91cm5leV9pZCI6IjNlYzAzNDRlLWYyNzQtNDRmZC1iYzA0LWI2ODdkMmIzMjY2MyJ9fQ.vRrp2cOh8pItoAxJb8QlkZFY3wSQvj3bVhGfnKWMQ94"
+                    val identity: Identity =AnonymousIdentity.Builder()
+                    .withNameIdentifier(nameIdentifier)
+                    .withEmailIdentifier(emailIdentifier)
+                    .build()
+                Zendesk.INSTANCE.setIdentity(identity)
+
+//                val identity: Identity = JwtIdentity(testToken)
+//                Zendesk.INSTANCE.setIdentity(identity)
                 //4.Chat SDK
                 Chat.INSTANCE.init(activity, accountKey, applicationId)
+                Chat.INSTANCE.setIdentity(JwtAuthenticator {
+                    it.onTokenLoaded(testToken)
+                })
                 result.success("Init completed!")
             }
             "startChatV2" -> {
@@ -98,7 +109,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 val botLabel = call.argument<String>("botLabel")
                 val toolbarTitle = call.argument<String>("toolbarTitle")
                 val endChatSwitch = call.argument<Boolean>("endChatSwitch") ?: true
-                val departmentName = call.argument<String>("departmentName") ?: "Department name"
+                val departmentName = call.argument<String>("departmentName") ?: "Support"
                 val botAvatar = call.argument<Int>("botAvatar") ?: R.drawable.zui_avatar_bot_default
                 val profileProvider = Chat.INSTANCE.providers()?.profileProvider()
                 val chatProvider = Chat.INSTANCE.providers()?.chatProvider()
@@ -119,11 +130,11 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                         .withTranscriptEnabled(true)
                         .withOfflineFormEnabled(true)
                         //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-                        .withPreChatFormEnabled(isPre)
-                        .withNameFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                        .withEmailFieldStatus(PreChatFormFieldStatus.HIDDEN)
+                        .withPreChatFormEnabled(true)
+                        .withNameFieldStatus(PreChatFormFieldStatus.REQUIRED)
+                        .withEmailFieldStatus(PreChatFormFieldStatus.REQUIRED)
                         .withPhoneFieldStatus(PreChatFormFieldStatus.REQUIRED)
-                        .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                        .withDepartmentFieldStatus(PreChatFormFieldStatus.REQUIRED)
                 if (!endChatSwitch) {
                     chatConfigurationBuilder.withChatMenuActions(ChatMenuAction.CHAT_TRANSCRIPT)
                 }
