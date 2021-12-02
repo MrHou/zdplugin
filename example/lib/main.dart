@@ -14,17 +14,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  // String _platformVersion = 'Unknown';
+  // String _accountKey = '41a747b5-7d23-4876-85bb-89ff555ec0bf';
+  // String _applicationId = 'be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d';
+  // String _clientId = 'mobile_sdk_client_2bb73df48f963be15710';
+  // String _domainUrl = 'https://hellojasper.zendesk.com';
   String _platformVersion = 'Unknown';
-  String _accountKey = '41a747b5-7d23-4876-85bb-89ff555ec0bf';
-  String _applicationId = 'be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d';
-  String _clientId = 'mobile_sdk_client_2bb73df48f963be15710';
-  String _domainUrl = 'https://hellojasper.zendesk.com';
+  String _accountKey = '60fe70d1-f341-4b3e-898d-0a87d9043d3d';
+  String _applicationId = 'dcc73c89a0d6c3c05de0729f05d9c78bc867ca164e743ee6';
+  String _clientId = 'mobile_sdk_client_7211ae5f16806b37b91f';
+  String _domainUrl = 'https://testdomainmydomaintestetstghhelp.zendesk.com';
   FlutterZendeskPlugin _flutterPlugin = FlutterZendeskPlugin();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+      initPlatformState();
+  
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -54,9 +61,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         phone: "123121515",
         name: "HGY iOSsdsd",
         email: "testtest@test.com",
-        departmentName: "Support",
+        departmentName: null,
       );
-      
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -98,11 +104,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     name: "HGY New",
                     email: "testtest@test.com",
                     botLabel: "Jasper",
-                    departmentName: "Support",
+                    departmentName: null, //"Support",
                     endChatSwitch: true,
                     toolbarTitle: "Hey user \$usernme Jasper helloyyyyyy");
               },
-              child: Text("Start Chat V2"),
+              child: Text("Zendesk Messaging"),
             ),
             RaisedButton(
               onPressed: () async {

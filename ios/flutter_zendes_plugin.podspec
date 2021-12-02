@@ -22,11 +22,12 @@ A Zendes Flutter plugin.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
 
   s.swift_version = '5.0'
-  #s.dependency 'ZendeskSupportSDK', '5.3.0'
+  #s.dependency 'ZendeskSupportSDK'
   #s.dependency 'ZendeskSupportProvidersSDK'
-  #s.dependency 'ZendeskSDKMessaging', '1.2.0'
-  s.dependency 'ZendeskAnswerBotSDK' # AnswerBot-only on the Unified SDK
-  s.dependency 'ZendeskChatSDK'      # Chat-only on the Unified SDK
-  s.dependency 'ZendeskSupportSDK'   # Support-only on the Unified SDK
+  s.dependency 'ZendeskSDKMessaging'
   
+  #s.dependency 'ZendeskAnswerBotSDK' # AnswerBot-only on the Unified SDK
+  #s.dependency 'ZendeskChatSDK'      # Chat-only on the Unified SDK
+  #s.dependency 'ZendeskChatProvidersSDK'
+  #s.dependency 'ZDCChat'
 end
