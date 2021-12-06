@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // String _domainUrl = 'https://hellojasper.zendesk.com';
   //93de026d461300bdcfd985918a22cdd4e0411d94ba5aff52d46d8e5cbc3ffec1
   // String _platformVersion = 'Unknown';
-  String _accountKey = '60fe70d1-f341-4b3e-898d-0a87d9043d3d';
+  String _accountKey = 'swbZZ0fqjxlp0slJRNfBD2qp8FYEDXri';
   String _applicationId = 'dcc73c89a0d6c3c05de0729f05d9c78bc867ca164e743ee6';
   String _clientId = 'mobile_sdk_client_7211ae5f16806b37b91f';
   String _domainUrl = 'https://testdomainmydomaintestetstghhelp.zendesk.com';

@@ -34,8 +34,14 @@ target 'Runner' do
  #pod 'ChatSDK', :git => 'https://github.com/zendesk/chat_sdk_ios.git'     
  #pod 'ChatProvidersSDK', :git => 'https://github.com/zendesk/chat_providers_sdk_ios.git'
  #pod 'ZendeskSDKSocketClient', :git => 'https://github.com/zendesk/sdk_socket_client_ios.git'
- #pod 'ZendeskChatSDK', :path => '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ZendeskChatSDK.podspec'#'2.11.2'
- #pod 'ZendeskChatProvidersSDK', :path => '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ZendeskChatProvidersSDK.podspec' #'2.11.2'
+ #pod 'ZendeskChatSDK', :path => 'file:///Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ChatSDK.framework'#'2.11.2'
+ pod 'ZendeskChatSDK', :git => 'https://github.com/zendesk/chat_sdk_ios.git'
+ pod 'ZendeskChatProvidersSDK', :git => 'https://github.com/zendesk/chat_providers_sdk_ios.git' #'2.11.2'
+ pod 'ZendeskMessagingSDK', :git => 'https://github.com/zendesk/messaging_sdk_ios.git'
+ pod 'ZendeskMessagingAPISDK', :git => 'https://github.com/zendesk/messagingapi_sdk_ios.git'
+ pod 'ZendeskCommonUISDK', :git => 'https://github.com/zendesk/commonui_sdk_ios.git'
+ pod 'ZendeskSDKConfigurationsSDK', :git => 'https://github.com/zendesk/sdkconfigurations_sdk_ios.git'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 

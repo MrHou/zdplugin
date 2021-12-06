@@ -23,14 +23,10 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
     var authToken = "{\"id\": \"73e75714-bbf7-4596-8212-8b0164f1ed97\", \"hash\": \"bb5bcaebddd7f5c956235bf05d13cdd2c20e6004a546e2b73a351b4b15fa5feb\"}"
     
-    public func getToken(_ completion: @escaping (String?, Error?) -> Void) {
-        completion(authToken, nil)
-    }
-    
-//    let key = "eyJzZXR0aW5nc191cmwiOiJodHRwczovL3Rlc3Rkb21haW5teWRvbWFpbnRlc3RldHN0Z2hoZWxwLnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxRk5XNEtRTVdUUEJZQTZLODJaRFdXTjJLLmpzb24ifQ=="
-    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
+        UITabBar.appearance().backgroundColor = UIColor.red
+        UITabBar.appearance().tintColor = UIColor.red
         let channel = FlutterMethodChannel(name: "flutter_zendes_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterZendeskPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
@@ -83,27 +79,6 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
 //            }
             //CHAT V2 SDK
             Chat.initialize(accountKey: accountKey)
-//            Chat.instance?.resetIdentity(nil)
-//            Chat.instance?.setIdentity(authenticator: self)
-//            Messaging.initialize(channelKey:key) { result in
-//                        // Tracking the error from initialization failures in your
-//                        // crash reporting dashboard will help to triage any unexpected failures in production
-//                       if case let .failure(error) = result {
-//                           print("Messaging did not initialize.\nError: \(error.errorDescription ?? "")")
-//                       }
-//                   }
-//
-//            var token: ChatProvidersSDK.ObservationToken?
-//              token = Chat.connectionProvider?.observeConnectionStatus { status in
-//                  guard status.isConnected else { return }
-//
-//                  Chat.chatProvider?.setDepartment("Support", completion: {res in
-//                      print(res)
-//                  })
-//                  Chat.profileProvider?.setNote("Visitor Notes")
-//                  token?.cancel() // Ensure call only happens once
-//              }
-           
             result("iOS init completed" )
         case "startChatV1":
             startChatV1()
@@ -115,65 +90,33 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let name = dic["name"] as? String ?? ""
             let department = dic["departmentName"] as? String ?? ""
            
-//            setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
+            setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
             print(Chat.instance?.profileProvider.visitorInfo);
             do {
                 try startChatV2(botLabel: botLabel)
-               
             } catch let error{
                 print("error:\(error)")
             }
             
         case "helpCenter":
             let currentVC = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
-//            let hcConfig = HelpCenterUiConfiguration()
-//            hcConfig.showContactOptions = true
-//            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig])
-//            currentVC?.pushViewController(helpCenter, animated: true)
-//            result("iOS helpCenter UI:" + helpCenter.description + "   ")
+            let hcConfig = HelpCenterUiConfiguration()
+            hcConfig.showContactOptions = true
+            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig])
+            currentVC?.pushViewController(helpCenter, animated: true)
+            result("iOS helpCenter UI:" + helpCenter.description + "   ")
         case "requestView":
             let rootViewController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
             
-//            setVisitorInfo(name: "name", email: "email", phoneNumber: "34235435", departmentName: "Support", tags: [])
-//
-//            let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .required, email: .required, phoneNumber: .optional,department: .hidden)
-//            let chatConfiguration = ChatConfiguration()
-//
-//            //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
-//            chatConfiguration.isChatTranscriptPromptEnabled = true
-//            //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-//            chatConfiguration.isPreChatFormEnabled = true
-//            //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
-//            chatConfiguration.isOfflineFormEnabled = true
-            //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-//            chatConfiguration.isAgentAvailabilityEnabled = true
-//            //This property allows you to configure the requirements of each of the pre-chat form fields.
-//
-//            chatConfiguration.preChatFormConfiguration = chatFormConfiguration
-//
             let viewController = RequestUi.buildRequestUi(with: [])
             
             rootViewController?.pushViewController(viewController, animated: true)
         case "requestListView":
             setVisitorInfo(name: "name", email: "email", phoneNumber: "34235435", departmentName: "Support", tags: [])
             let rootViewController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
-//            let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .hidden)
-//            let chatConfiguration = ChatConfiguration()
-//
-//            //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
-//            chatConfiguration.isChatTranscriptPromptEnabled = true
-//            //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-//            chatConfiguration.isPreChatFormEnabled = true
-//            //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
-//            chatConfiguration.isOfflineFormEnabled = true
-//            //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-//            chatConfiguration.isAgentAvailabilityEnabled = true
-//            //This property allows you to configure the requirements of each of the pre-chat form fields.
-//
-//            chatConfiguration.preChatFormConfiguration = chatFormConfiguration
             
-//            let viewController = RequestUi.buildRequestList(with: [])
-//            rootViewController?.pushViewController(viewController, animated: true)
+            let viewController = RequestUi.buildRequestList(with: [])
+            rootViewController?.pushViewController(viewController, animated: true)
         case "changeNavStatus":
             let rootViewController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
             guard let dic = call.arguments as? Dictionary<String, Any> else { return }
@@ -209,25 +152,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let chatAPIConfiguration = ChatAPIConfiguration()
 //            chatAPIConfiguration.tags = ["support"]
             chatAPIConfiguration.visitorInfo = visitorInfo
-            chatAPIConfiguration.department = "Support"
+//            chatAPIConfiguration.department = "Support"
          Chat.instance?.configuration = chatAPIConfiguration
         
-        var token: ChatProvidersSDK.ObservationToken?
-        token = Chat.connectionProvider?.observeConnectionStatus { status in
-               guard status.isConnected else { return }
-
-//               Chat.profileProvider?.addTags(["app"])
-               Chat.profileProvider?.setNote("Visitor Notes")
-               print("set up visitor info...")
-               Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: {(mm)in
-                   print("set up visitor info...SUCESSS")
-               })
-
-               token?.cancel() // Ensure call only happens once
-           }
-        Chat.connectionProvider?.connect()
-
-     
         }
     
     func startChatV2(botLabel:String) throws {
@@ -246,55 +173,45 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //This property allows you to configure the requirements of each of the pre-chat form fields.
 
         chatConfiguration.preChatFormConfiguration = chatFormConfiguration
-        chatConfiguration.isPreChatFormEnabled = true
+        chatConfiguration.isPreChatFormEnabled = false
         // Name for Bot messages
         let messagingConfiguration = MessagingConfiguration()
         messagingConfiguration.name = botLabel
         
 
 
-//        let answerBotEngine = try AnswerBotEngine.engine()
         let chatEngine = try ChatEngine.engine()
         
-        CommonTheme.currentTheme.primaryColor = UIColor.green
-       
+        CommonTheme.currentTheme.primaryColor = UIColor.red
+
         let viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
        
 
         Chat.connectionProvider?.observeConnectionStatus({ s in
             print("connections tstaus: \(s)")
         })
-//        Chat.connectionProvider?.connect()
-//
-//        Chat.chatProvider?.sendMessage("tet") { (result) in
-//                    switch result {
-//                    case .success(let messageId):
-//                        NSLog("Message sent: %@", messageId)
-//                    case .failure(let error):
-//                        NSLog("Send failed, resending....")
-//                        let messageId = error.messageId
-//                        if messageId != nil && !(messageId?.isEmpty ?? false) {
-//                            Chat.chatProvider?.resendFailedFile(withId: messageId!)
-//                        }
-//                    }
-//                }
-//        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+
             let rootViewController = UIApplication.shared.windows.filter({ (w) -> Bool in
                       return w.isHidden == false
                   }).first?.rootViewController
-    //        guard let viewController = Messaging.instance?.messagingViewController() else { return }
-            self.presentViewController(rootViewController: rootViewController, view: viewController);
-           
-           
-//        })
 
+            self.presentViewController(rootViewController: rootViewController, view: viewController);
         
     }
     
     
     func presentViewController(rootViewController: UIViewController?, view: UIViewController) {
+    
+
+       
            if (rootViewController is UINavigationController) {
-               (rootViewController as! UINavigationController).pushViewController(view, animated: true)
+               let root = (rootViewController as! UINavigationController)
+               root.tabBarController?.tabBar.tintColor = UIColor.red
+               root.tabBarController?.tabBar.backgroundColor = UIColor.green
+               root.tabBarController?.tabBar.barTintColor = UIColor.yellow
+               root.tabBarController?.tabBar.isTranslucent = false
+              
+               root.pushViewController(view, animated: true)
            } else {
                if #available(iOS 13.0, *) {
                     if var topController = UIApplication.shared.keyWindow?.rootViewController  {
@@ -306,32 +223,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
 
            }
        }
+  
        }
     
-    func postAction(url:String) {
-        let Url = String(format: url)
-        guard let serviceUrl = URL(string: Url) else { return }
-        let parameterDictionary = {}
-        var request = URLRequest(url: serviceUrl)
-        request.httpMethod = "GET"
-        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-       
-        
-        let session = URLSession.shared
-        session.dataTask(with: request) { (data, response, error) in
-            if let response = response {
-                print(response)
-            }
-            if let data = data {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    print(json)
-                } catch {
-                    print(error)
-                }
-            }
-        }.resume()
-    }
 }
 
 extension Bundle {
@@ -345,23 +239,3 @@ extension Bundle {
         return nil
     }
 }
-
-//extension SwiftFlutterZendeskPlugin {
-//
-//    var engines: [Engine] {
-//        let engineTypes: [Engine.Type] = [ChatEngine.self]
-//        return engines(from: engineTypes)
-//    }
-//
-//    func engines(from engineTypes: [Engine.Type]) -> [Engine] {
-//        engineTypes.compactMap { type -> Engine? in
-//            switch type {
-//            case is ChatEngine.Type:
-//                return try? ChatEngine.engine()
-//            default:
-//                fatalError("Unhandled engine of type: \(type)")
-//            }
-//        }
-//    }
-//}
-

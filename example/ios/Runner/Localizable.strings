@@ -4,141 +4,14 @@
 
   Created by Dmitry Dyachenko on 30.11.2021.
   
-*/
-// MARK: Engine handover
-/* Label for button that when tapped on will allow the user to switch to chatting with an agent. */
-"ios.conversation.ui.chat.handover.message.selection" = "Chat with an agent";
-
-/* Button action acknowledgement to let the user know they will be connected to an agent */
-"ios.conversation.ui.chat.welcome_message.handover" = "OK. I will find someone who can help with your query.";
-
-// MARK: Customer satisfaction (CSAT)
-
-/* CSAT message shown to the user when an agent has requested the user to rate their chat experience. */
-"ios.conversation.ui.chat.rating.message" = "Hey, just checking in to see how your chat with %@ has been going?";
-
-/* CSAT button label that the user presses to give a negative chat rating. If the emojis don’t translate well to your language, please remove them. */
-"ios.conversation.ui.chat.rating.button_label.bad" = "Bad :thumbs-down-emoji:";
-
-/* CSAT button label that the user presses to give a positive chat rating. If the emojis don’t translate well to your language, please remove them. */
-"ios.conversation.ui.chat.rating.button_label.good" = "Good :thumbs-up-emoji:";
-
-/* CSAT message shown to the user inidicating that they have the option to leave a comment about the chat. */
-"ios.conversation.ui.chat.rating.comment.prompt.message" = "We value your feedback. If you like, you can also add a comment with more detail.";
-
-/* CSAT button label that the user presses if they would like to leave a comment about their chat experience. */
-"ios.conversation.ui.chat.rating.comment.action.button_label" = "Add a comment";
-
-/* Input field placeholder suggesting the user to enter a comment about how the chat is going. Should be kept short to be visible within the input */
-"ios.conversation.ui.chat.rating.add.comment.composer.hint" = "Type your comment...";
-
-/* CSAT confirmation message. Shown to the user to let them know that their comment has been received. 'chat' is a noun and must be translated. */
-"ios.conversation.ui.chat.rating.acknowledgement.message" = "Thank you for the feedback. You can now get back to your chat.";
-
-// MARK: Email transcript UIAlertAction flow
-
-/* Email transcript UIAlertAction title, shown in the chat menu. User clicks it when they want to receive a chat transcript. */
-"ios.conversation.ui.chat.transcript.prompt.request_transcript.title" = "Request transcript";
-
-/* Email transcript UIAlertAction prompt message. Prompts user if they'd like to send the transcript to their email. */
-"ios.conversation.ui.chat.transcript.prompt.request_transcript_prompt.label" = "Would you like a transcript of this chat sent to your email?";
-
-/* Email transcript UIAlertAction message to prompt the user to enter their email. */
-"ios.conversation.ui.chat.transcript.prompt.ask_email.label" = "What email address should the transcript be sent to?";
-
-/* Email transcript UIAlertAction text field placeholder for the the email address field. */
-"ios.conversation.ui.chat.transcript.prompt.email_placeholder" = "Email address.";
-
-/* Email transcript UIAlertAction prompt message to inform user they entered a wrong email, and should try enter a new one. */
-"ios.conversation.ui.chat.transcript.prompt.invalid_email.message" = "A valid email address is required.";
-
-/* Email transcript UIAlertAction response message for the user to stop the email transcript prompt flow. */
-"ios.conversation.ui.chat.transcript.prompt.no" = "No";
-
-/* Email transcript UIAlertAction response message for the user to continue the email transcript prompt flow. */
-"ios.conversation.ui.chat.transcript.prompt.yes" = "Yes";
-
-/* Email transcript UIAlertAction label to cancel the action. */
-"ios.conversation.ui.chat.transcript.prompt.cancel" = "Cancel";
-
-/* Email transcript UIAlertAction label to confirm the action, and send the email transcript request. */
-"ios.conversation.ui.chat.transcript.prompt.send_email" = "Send";
-
-/* Email transcript banner label displayed after user finishes the flow and sets the email they'd like the chat transcript to be sent to. */
-"ios.conversation.ui.chat.transcript.email_set.label" = "Transcript will be sent to %@ when the chat ends";
-
-// MARK: End chat flow
-
-/* End chat UIAlertAction title, shown in the chat menu. User clicks it when they want to end an active chat. */
-"ios.conversation.ui.end_chat.button_label" = "End chat";
-
-// MARK: System messages
-
-/* System message shown when the user ended the chat, or the chat was ended by timeout. */
-"ios.conversation.ui.end_chat.system_message" = "Chat ended";
-
-/* System message when a user joins the chat. Placeholder gets replaced with the display name of the user. */
-"ios.conversation.ui.member.join" = "%@ joined the chat";
-
-/* System message when an agent leaves the chat. Placeholder gets replaced with the display name of the agebt. */
-"ios.conversation.ui.member.leave" = "%@ left the chat";
-
-/* System message to show the user their position in the queue. */
-"ios.conversation.ui.queue.position" = "Queue position: %lu";
-
-// MARK: Chat form field hints
-
-/* Input field placeholder suggesting the user to enter their name. Should be kept short to be visible within the input field. */
-"ios.conversation.ui.pre_chat.form.add.name.composer.hint" = "What is your name?";
-
-/* Input field placeholder suggesting the user to enter their email address. Should be kept short to be visible within the input field. */
-"ios.conversation.ui.pre_chat.form.add.email.composer.hint" = "What is your email address?";
-
-/* Input field placeholder suggesting the user to enter their phone number. Should be kept short to be visible within the input field. */
-"ios.conversation.ui.pre_chat.form.add.phone.number.composer.hint" = "What is your number?";
 
 // MARK: Pre-chat form flow
 
 /* Pre-chat form welcome message shown when a user starts the flow, asking them for their query. */
-"ios.conversation.ui.chat.welcome_message.conversation_start" = "Hi. What can we help you with today?";
-
-/* Pre-chat form statement, informing the user more information is required before reaching out to an agent. */
-"ios.conversation.ui.pre_chat.form.information.request.message" = "I will find someone to help you. First I need a few pieces of information.";
-
-/* Pre-chat form question prompting the user to enter their name. */
-"ios.conversation.ui.pre_chat.form.name.request.message" = "What is your name?";
-
-/* Pre-chat form question prompting the user to enter their email address. */
-"ios.conversation.ui.pre_chat.form.email.request.message" = "What is your email address?";
-
-/* Pre-chat form statement, informing the user they entered an invalid email, and need to try again. */
-"ios.conversation.ui.pre_chat.form.email.retry.message" = "The email address you entered is incorrect. Enter a valid email address.";
-
-/* Pre-chat form question prompting the user to enter their phone number. */
-"ios.conversation.ui.pre_chat.form.phone.number.request.message" = "What is your phone number?";
-
-/* Pre-chat form question prompting the user to pick the department they'd like to speak to. */
-"ios.conversation.ui.pre_chat.form.department.choice.message" = "Which department would best answer your question?";
-
-/* Pre-chat form button label that allows the user to skip an optional form question. */
-"ios.conversation.ui.pre_chat.form.skip.button_label" = "Skip";
-
-/* Pre-chat form message to acknowledge a user entering their name. */
-"ios.conversation.ui.pre_chat.form.thank_you.message" = "Thank you.";
+"ios.conversation.ui.chat.welcome_message.conversation_start" = "Hi! Welcome to Jasper ​​ \🙌  I\'m here Monday through Friday, 9 AM to 5 PM ET, to be your personal guide. If you have any questions, just reply to this message and I will be with you as soon as possible!";
 
 // MARK: Offline form flow
 
 /* Offline form welcome message informing the user no one is online. This is followed by `offline_form.message_prompt` message asking for more info. */
-"ios.conversation.ui.chat.offline_form.welcome_message" = "Hi. Unfortunately nobody is online at the moment.";
+"ios.conversation.ui.chat.offline_form.welcome_message" = "Sorry, we aren\'t online at the moment. We will be available from 9-5 EST every weekday. Please leave a message and we will follow up as soon as we are back online. We look forward to supporting you.";
 
-/* Offline form statement, informing the user information is needed to get in contact at a later point in time. */
-"ios.conversation.ui.chat.offline_form.introduction_message" = "To contact you when someone is available, I need some more information.";
-
-/* Offline form completion message shown to the user when they complete the form. */
-"ios.conversation.ui.chat.offline_form.completion_acknowledgement" = "We've received your message and will get back to you as soon as possible.";
-
-/* Offline message informing the user that there is no active agents, and to check back later. Shown when ChatConfiguration.isOfflineFormEnabled is disabled */
-"ios.conversation.ui.offline.no_agents_online" = "Unfortunately, nobody is online at the moment. Check back later.";
-
-/* Offline message asking the user for their details, like name and email */
-"ios.conversation.ui.chat.offline_form.message__field_prompt" = "What can we help you with when we are back online?";
