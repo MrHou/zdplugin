@@ -25,8 +25,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        UITabBar.appearance().backgroundColor = UIColor.red
-        UITabBar.appearance().tintColor = UIColor.red
+       
         let channel = FlutterMethodChannel(name: "flutter_zendes_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterZendeskPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
@@ -154,7 +153,14 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             chatAPIConfiguration.visitorInfo = visitorInfo
 //            chatAPIConfiguration.department = "Support"
          Chat.instance?.configuration = chatAPIConfiguration
+                    var token: ChatProvidersSDK.ObservationToken?
+                      token = Chat.connectionProvider?.observeConnectionStatus { status in
+                          guard status.isConnected else { return }
         
+                          Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: nil)
+                          Chat.profileProvider?.setNote("Visitor from Jasper app")
+                          token?.cancel() // Ensure call only happens once
+                      }
         }
     
     func startChatV2(botLabel:String) throws {
@@ -165,7 +171,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
         chatConfiguration.isChatTranscriptPromptEnabled = true
         //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-        chatConfiguration.isPreChatFormEnabled = true
+        chatConfiguration.isPreChatFormEnabled = false
         //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
         chatConfiguration.isOfflineFormEnabled = true
         //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
@@ -173,12 +179,10 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //This property allows you to configure the requirements of each of the pre-chat form fields.
 
         chatConfiguration.preChatFormConfiguration = chatFormConfiguration
-        chatConfiguration.isPreChatFormEnabled = false
         // Name for Bot messages
         let messagingConfiguration = MessagingConfiguration()
         messagingConfiguration.name = botLabel
         
-
 
         let chatEngine = try ChatEngine.engine()
         
@@ -202,15 +206,21 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
     func presentViewController(rootViewController: UIViewController?, view: UIViewController) {
     
-
        
            if (rootViewController is UINavigationController) {
                let root = (rootViewController as! UINavigationController)
-               root.tabBarController?.tabBar.tintColor = UIColor.red
-               root.tabBarController?.tabBar.backgroundColor = UIColor.green
-               root.tabBarController?.tabBar.barTintColor = UIColor.yellow
-               root.tabBarController?.tabBar.isTranslucent = false
-              
+               view.tabBarController?.tabBar.tintColor = UIColor.red
+               view.tabBarController?.tabBar.backgroundColor = UIColor.green
+               view.tabBarController?.tabBar.barTintColor = UIColor.yellow
+               view.tabBarController?.tabBar.isTranslucent = false
+//               UITabBar.appearance().tintColor = UIColor.brown
+//               UITabBar.appearance().backgroundColor = UIColor.red
+//               UITabBar.appearance().barTintColor = UIColor.red
+               let tabBarAppearance = UITabBar.appearance()
+               tabBarAppearance.isTranslucent = false
+               tabBarAppearance.barTintColor = UIColor.red
+               tabBarAppearance.backgroundColor = UIColor.red
+//               root.present(view, animated: true, completion: nil)
                root.pushViewController(view, animated: true)
            } else {
                if #available(iOS 13.0, *) {
@@ -239,3 +249,4 @@ extension Bundle {
         return nil
     }
 }
+
