@@ -86,20 +86,22 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
                 //3.setIdentity
 
-                val testToken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzgyMDg1MzEsImp0aSI6IjcxMjdjZWY3LWY3ZTktNDQ0Ny1hMjRlLTI3YmU1N2NhMzliZCIsImVtYWlsIjoidGVzdHRlc3RAdGVzdC5jb20iLCJuYW1lIjoiRCBEaWFjbmtvIiwiZXh0ZXJuYWxfaWQiOiI5OGJjNTE5ZS05ZWFmLTRkNzAtYmVkOS1lNjY4OTk2NTNlOGYiLCJwaG9uZSI6IisxMzEyMzEyMzEyMyIsInJvbGUiOiJhZG1pbiIsInVzZXJfZmllbGRzIjp7InByaW1hcnlfam91cm5leV9pZCI6IjNlYzAzNDRlLWYyNzQtNDRmZC1iYzA0LWI2ODdkMmIzMjY2MyJ9fQ.vRrp2cOh8pItoAxJb8QlkZFY3wSQvj3bVhGfnKWMQ94"
-                    val identity: Identity =AnonymousIdentity.Builder()
-                    .withNameIdentifier(nameIdentifier)
-                    .withEmailIdentifier(emailIdentifier)
-                    .build()
+                val testToken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Mzg0NTI3NTMsImp0aSI6IjNkMmUzZDdkLWY4YTAtNDc3OC1iYWVhLTA5OTE0YWJkZmNmMiIsImVtYWlsIjoidGVzdHRlc3RAdGVzdC5jb20iLCJuYW1lIjoiRCBEaWFjbmtvIiwiZXh0ZXJuYWxfaWQiOiI5OGJjNTE5ZS05ZWFmLTRkNzAtYmVkOS1lNjY4OTk2NTNlOGYiLCJwaG9uZSI6IisxMzEyMzEyMzEyMyIsInJvbGUiOiJhZG1pbiIsInVzZXJfZmllbGRzIjp7InByaW1hcnlfam91cm5leV9pZCI6IjNlYzAzNDRlLWYyNzQtNDRmZC1iYzA0LWI2ODdkMmIzMjY2MyJ9fQ.O-Aet7I63p2DieU0vUYMIavt9Wa0GzdFPwBKJkU5NNIЭ"
+                        val identity: Identity = JwtIdentity(testToken)
+//                    val identity: Identity =AnonymousIdentity.Builder()
+//                    .withNameIdentifier(nameIdentifier)
+//                    .withEmailIdentifier(emailIdentifier)
+//                    .build()
                 Zendesk.INSTANCE.setIdentity(identity)
 
-//                val identity: Identity = JwtIdentity(testToken)
-//                Zendesk.INSTANCE.setIdentity(identity)
+
+                Zendesk.INSTANCE.setIdentity(identity)
                 //4.Chat SDK
                 Chat.INSTANCE.init(activity, accountKey, applicationId)
-                Chat.INSTANCE.setIdentity(JwtAuthenticator {
-                    it.onTokenLoaded(testToken)
-                })
+               
+//                Chat.INSTANCE.setIdentity(JwtAuthenticator {
+//                    it.onTokenLoaded(testToken)
+//                })
                 result.success("Init completed!")
             }
             "startChatV2" -> {

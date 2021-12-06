@@ -1,26 +1,33 @@
 import Flutter
 import UIKit
-//import SupportSDK
-//import ChatSDK
-//import ChatProvidersSDK
-//import MessagingSDK
-//import MessagingAPI
-//import SDKConfigurations
-//import ZendeskCoreSDK
-//import SupportProvidersSDK
-import ZendeskSDKMessaging
-import ZendeskSDKLogger
+import SupportSDK
+import ChatSDK
+import ChatProvidersSDK
+import MessagingSDK
+import MessagingAPI
+import SDKConfigurations
+import ZendeskCoreSDK
+import SupportProvidersSDK
+//import ZendeskSDKMessaging
+//import ZendeskSDKLogger
 
-//import AnswerBotProvidersSDK
-//import AnswerBotSDK
+import AnswerBotProvidersSDK
+import AnswerBotSDK
 //import ZDCChat
 // ViewController and engines
 
 // Theme
-//import CommonUISDK
-//import ChatProvidersSDK
+import CommonUISDK
+
 public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
-    let key = "eyJzZXR0aW5nc191cmwiOiJodHRwczovL3Rlc3Rkb21haW5teWRvbWFpbnRlc3RldHN0Z2hoZWxwLnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxRk5XNEtRTVdUUEJZQTZLODJaRFdXTjJLLmpzb24ifQ=="
+    
+    var authToken = "{\"id\": \"73e75714-bbf7-4596-8212-8b0164f1ed97\", \"hash\": \"bb5bcaebddd7f5c956235bf05d13cdd2c20e6004a546e2b73a351b4b15fa5feb\"}"
+    
+    public func getToken(_ completion: @escaping (String?, Error?) -> Void) {
+        completion(authToken, nil)
+    }
+    
+//    let key = "eyJzZXR0aW5nc191cmwiOiJodHRwczovL3Rlc3Rkb21haW5teWRvbWFpbnRlc3RldHN0Z2hoZWxwLnplbmRlc2suY29tL21vYmlsZV9zZGtfYXBpL3NldHRpbmdzLzAxRk5XNEtRTVdUUEJZQTZLODJaRFdXTjJLLmpzb24ifQ=="
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -36,10 +43,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
          
             result("IOS")
         case "init":
-//            Logger.isEnabled = true
-//            Logger.defaultLevel = .verbose
-            Logger.enabled = true
-            Logger.level = .default
+            Logger.isEnabled = true
+            Logger.defaultLevel = .verbose
+          
             guard let dic = call.arguments as? Dictionary<String, Any> else { return }
             
             let accountKey = dic["accountKey"] as? String ?? ""
@@ -53,17 +59,21 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let email = dic["email"] as? String ?? ""
             let name = dic["name"] as? String ?? ""
 //            postAction(url: domainUrl)
-//            Zendesk.initialize(appId: "dcc73c89a0d6c3c05de0729f05d9c78bc867ca164e743ee6",
-//                clientId: "mobile_sdk_client_7211ae5f16806b37b91f",
-//                zendeskUrl: "https://testdomainmydomaintestetstghhelp.zendesk.com")
-//            Support.initialize(withZendesk: Zendesk.instance)
-//            AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
-          
-//            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzgzNDMyMzcsImp0aSI6ImM1YTExYTA2LWVjNzgtNDkyMi1iNzEyLTgxYTk3OWYzYzI1MyIsImVtYWlsIjoidGVzdHRlc3RAdGVzdC5jb20iLCJuYW1lIjoiRCBEaWFjbmtvIiwiZXh0ZXJuYWxfaWQiOiI5OGJjNTE5ZS05ZWFmLTRkNzAtYmVkOS1lNjY4OTk2NTNlOGYiLCJwaG9uZSI6IisxMzEyMzEyMzEyMyIsInJvbGUiOiJhZG1pbiIsInVzZXJfZmllbGRzIjp7InByaW1hcnlfam91cm5leV9pZCI6IjNlYzAzNDRlLWYyNzQtNDRmZC1iYzA0LWI2ODdkMmIzMjY2MyJ9fQ.eSE8yIcKrjizWgcomFYFxUdF-aM4784MB7D0UTLdRsw"
-//            Zendesk.instance?.setIdentity(Identity.createJwt(token: token))
+//            Zendesk.initialize(appId: applicationId,
+//                clientId: clientId,
+//                zendeskUrl: domainUrl)
+            Zendesk.initialize(appId: "be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d",
+                clientId: "mobile_sdk_client_2bb73df48f963be15710",
+                zendeskUrl: "https://hellojasper.zendesk.com")
+
+            Support.initialize(withZendesk: Zendesk.instance)
+            AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
+
+            let idendity =  Identity.createJwt(token: authToken)
+            Zendesk.instance?.setIdentity(idendity)
 //            let identity = Identity.createAnonymous(name: "Dmytro Diachenko", email: "testtest@test.com")
 //            Zendesk.instance?.setIdentity(identity)
-//
+////
 //            //V1 Chat
 //            ZDCChat.initialize(withAccountKey: accountKey)
 //            ZDCChat.updateVisitor { user in
@@ -72,15 +82,16 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
 //                user?.email = email
 //            }
             //CHAT V2 SDK
-//            Chat.initialize(accountKey: accountKey,appId:applicationId)
-           
-            Messaging.initialize(channelKey:key) { result in
-                        // Tracking the error from initialization failures in your
-                        // crash reporting dashboard will help to triage any unexpected failures in production
-                       if case let .failure(error) = result {
-                           print("Messaging did not initialize.\nError: \(error.errorDescription ?? "")")
-                       }
-                   }
+            Chat.initialize(accountKey: accountKey)
+//            Chat.instance?.resetIdentity(nil)
+//            Chat.instance?.setIdentity(authenticator: self)
+//            Messaging.initialize(channelKey:key) { result in
+//                        // Tracking the error from initialization failures in your
+//                        // crash reporting dashboard will help to triage any unexpected failures in production
+//                       if case let .failure(error) = result {
+//                           print("Messaging did not initialize.\nError: \(error.errorDescription ?? "")")
+//                       }
+//                   }
 //
 //            var token: ChatProvidersSDK.ObservationToken?
 //              token = Chat.connectionProvider?.observeConnectionStatus { status in
@@ -104,8 +115,8 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let name = dic["name"] as? String ?? ""
             let department = dic["departmentName"] as? String ?? ""
            
-            setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
-//            print(Chat.instance?.profileProvider.visitorInfo);
+//            setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
+            print(Chat.instance?.profileProvider.visitorInfo);
             do {
                 try startChatV2(botLabel: botLabel)
                
@@ -140,9 +151,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
 //
 //            chatConfiguration.preChatFormConfiguration = chatFormConfiguration
 //
-//            let viewController = RequestUi.buildRequestUi(with: [])
-//            RequestUi.initialize()
-//            rootViewController?.pushViewController(viewController, animated: true)
+            let viewController = RequestUi.buildRequestUi(with: [])
+            
+            rootViewController?.pushViewController(viewController, animated: true)
         case "requestListView":
             setVisitorInfo(name: "name", email: "email", phoneNumber: "34235435", departmentName: "Support", tags: [])
             let rootViewController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
@@ -192,86 +203,69 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
     func setVisitorInfo(name:String,email:String,phoneNumber: String,departmentName: String,tags:Array<String>) -> Void {
 //        Chat.instance?.clearCache()
+//        Chat.instance?.resetIdentity(nil)
 //        print("indentity \(Chat.instance?.hasIdentity)")
-//        let visitorInfo = VisitorInfo.init(name: name, email: email, phoneNumber: phoneNumber)
-//            let chatAPIConfiguration = ChatAPIConfiguration()
-////            chatAPIConfiguration.tags = ["support"]
-////            chatAPIConfiguration.visitorInfo = visitorInfo
-////            chatAPIConfiguration.department = "All department"
-//        if let instance = Chat.instance {
-//            print("set up visitor info sucess")
-//            instance.configuration = chatAPIConfiguration
-//
-//        }else{
-//            print("set up visitor info ERORRR")
-//        }
+        let visitorInfo = VisitorInfo.init(name: name, email: email, phoneNumber: phoneNumber)
+            let chatAPIConfiguration = ChatAPIConfiguration()
+//            chatAPIConfiguration.tags = ["support"]
+            chatAPIConfiguration.visitorInfo = visitorInfo
+            chatAPIConfiguration.department = "Support"
+         Chat.instance?.configuration = chatAPIConfiguration
         
-//        var token: ChatProvidersSDK.ObservationToken?
-//        token = Chat.connectionProvider?.observeConnectionStatus { status in
-//               guard status.isConnected else { return }
-//               let visitorInfo = VisitorInfo(name: "fwfw", email: "email@fkjwnf.fl", phoneNumber: "938423847623846")
+        var token: ChatProvidersSDK.ObservationToken?
+        token = Chat.connectionProvider?.observeConnectionStatus { status in
+               guard status.isConnected else { return }
+
 //               Chat.profileProvider?.addTags(["app"])
-//               Chat.profileProvider?.setNote("Visitor Notes")
-//               print("set up visitor info...")
-//               Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: {(mm)in
-//                   print("set up visitor info...SUCESSS")
-//               })
-//
-//               token?.cancel() // Ensure call only happens once
-//           }
-//        Chat.connectionProvider?.connect()
+               Chat.profileProvider?.setNote("Visitor Notes")
+               print("set up visitor info...")
+               Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: {(mm)in
+                   print("set up visitor info...SUCESSS")
+               })
+
+               token?.cancel() // Ensure call only happens once
+           }
+        Chat.connectionProvider?.connect()
 
      
         }
     
     func startChatV2(botLabel:String) throws {
-//        let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .hidden)
-////
-//        let chatConfiguration = ChatConfiguration()
+        let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .optional)
 //
-//        //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
-//        chatConfiguration.isChatTranscriptPromptEnabled = false
-//        //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-//        chatConfiguration.isPreChatFormEnabled = true
-//        //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
-//        chatConfiguration.isOfflineFormEnabled = true
-//        //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-//        chatConfiguration.isAgentAvailabilityEnabled = true
-//        //This property allows you to configure the requirements of each of the pre-chat form fields.
-//
-//        chatConfiguration.preChatFormConfiguration = chatFormConfiguration
-//        chatConfiguration.isPreChatFormEnabled = true
-//        // Name for Bot messages
-//        let messagingConfiguration = MessagingConfiguration()
-//        messagingConfiguration.name = botLabel
-//        messagingConfiguration.isMultilineResponseOptionsEnabled = true
-//
-//
-////        let answerBotEngine = try AnswerBotEngine.engine()
-//        let chatEngine = try ChatEngine.engine()
+        let chatConfiguration = ChatConfiguration()
+
+        //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
+        chatConfiguration.isChatTranscriptPromptEnabled = true
+        //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
+        chatConfiguration.isPreChatFormEnabled = true
+        //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
+        chatConfiguration.isOfflineFormEnabled = true
+        //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
+        chatConfiguration.isAgentAvailabilityEnabled = true
+        //This property allows you to configure the requirements of each of the pre-chat form fields.
+
+        chatConfiguration.preChatFormConfiguration = chatFormConfiguration
+        chatConfiguration.isPreChatFormEnabled = true
+        // Name for Bot messages
+        let messagingConfiguration = MessagingConfiguration()
+        messagingConfiguration.name = botLabel
         
-//        CommonTheme.currentTheme.primaryColor = UIColor.green
+
+
+//        let answerBotEngine = try AnswerBotEngine.engine()
+        let chatEngine = try ChatEngine.engine()
+        
+        CommonTheme.currentTheme.primaryColor = UIColor.green
        
-//        let viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration])
-//        Messaging.instance.delegate = self
+        let viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
        
-//        if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
-//
-//            navigationController.pushViewController(viewController, animated: true)
-//
-//        }
-//        Chat.connectionProvider?.observeConnectionStatus({ s in
-//            print("connections tstaus: \(s)")
-//        })
-       
+
+        Chat.connectionProvider?.observeConnectionStatus({ s in
+            print("connections tstaus: \(s)")
+        })
 //        Chat.connectionProvider?.connect()
-        let rootViewController = UIApplication.shared.windows.filter({ (w) -> Bool in
-                  return w.isHidden == false
-              }).first?.rootViewController
-        guard let viewController = Messaging.instance?.messagingViewController() else { return }
-        presentViewController(rootViewController: rootViewController, view: viewController);
-       
-       
+//
 //        Chat.chatProvider?.sendMessage("tet") { (result) in
 //                    switch result {
 //                    case .success(let messageId):
@@ -284,6 +278,16 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
 //                        }
 //                    }
 //                }
+//        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+            let rootViewController = UIApplication.shared.windows.filter({ (w) -> Bool in
+                      return w.isHidden == false
+                  }).first?.rootViewController
+    //        guard let viewController = Messaging.instance?.messagingViewController() else { return }
+            self.presentViewController(rootViewController: rootViewController, view: viewController);
+           
+           
+//        })
+
         
     }
     

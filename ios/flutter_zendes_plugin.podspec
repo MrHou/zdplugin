@@ -12,22 +12,39 @@ A Zendes Flutter plugin.
   s.homepage         = 'http://hellojasper.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Jasper' => 'dd.dyach@gmail.com' }
-  s.source           = { :path => '.' }
+  s.source           = { :path => '.' }  
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
   s.static_framework = true
-
+  
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
 
   s.swift_version = '5.0'
   #s.dependency 'ZendeskSupportSDK'
-  #s.dependency 'ZendeskSupportProvidersSDK'
-  s.dependency 'ZendeskSDKMessaging'
+  s.dependency 'ZendeskSupportProvidersSDK'
+  #s.dependency 'ZendeskSDKMessaging'
   
-  #s.dependency 'ZendeskAnswerBotSDK' # AnswerBot-only on the Unified SDK
-  #s.dependency 'ZendeskChatSDK'      # Chat-only on the Unified SDK
-  #s.dependency 'ZendeskChatProvidersSDK'
+  s.dependency 'ZendeskAnswerBotSDK' # AnswerBot-only on the Unified SDK
+ 
   #s.dependency 'ZDCChat'
+  s.dependency 'ZendeskSupportSDK', '5.0.4'
+  #s.dependency 'ZendeskSDKSocketClient', '0.4.2'
+  
+ #s.ios.vendored_frameworks = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ZendeskChatSDK.framework', '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ZendeskChatProvidersSDK.framework'
+
+  #s.vendored_frameworks = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ZendeskChatSDK.framework', '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ZendeskChatProvidersSDK.framework'
+  #s.source = { :git => 'file:///Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/'}
+  s.dependency 'ZendeskChatProvidersSDK'
+  s.dependency 'ZendeskChatSDK'
+  
+  #s.subspec 'ZendeskChatSDK' do |ss| 
+  # ss.source_files = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/**/*.{h,m}' 
+  #end
+
+  #s.subspec 'ZendeskChatProvidersSDK' do |ss| 
+  #  ss.source_files = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/**/*.{h,m}' 
+  #end
+  
 end

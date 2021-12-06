@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  alice: ^0.2.5
   flutter_zendes_plugin:
     # When depending on this package from a real application you should use:
     #   flutter_zendes_plugin: ^x.y.z
@@ -22,7 +23,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  
 
 dev_dependencies:
   flutter_test:

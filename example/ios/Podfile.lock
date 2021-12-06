@@ -1,65 +1,162 @@
 PODS:
+  - better_player (0.0.1):
+    - Cache (~> 6.0.0)
+    - Flutter
+    - HLSCachingReverseProxyServer
+  - Cache (6.0.0)
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_zendes_plugin (0.0.3):
     - Flutter
-    - ZendeskSDKMessaging
+    - ZendeskAnswerBotSDK
+    - ZendeskChatProvidersSDK
+    - ZendeskChatSDK
+    - ZendeskSupportProvidersSDK
+    - ZendeskSupportSDK (= 5.0.4)
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
+  - HLSCachingReverseProxyServer (0.1.0):
+    - GCDWebServer (~> 3.5)
+    - PINCache (>= 3.0.1-beta.3)
+  - open_file (0.0.1):
+    - Flutter
   - package_info (0.0.1):
     - Flutter
-  - ZendeskSDKConversationKit (0.6.1):
-    - ZendeskSDKFayeClient (~> 0.4.2)
-    - ZendeskSDKHTTPClient (~> 0.5.1)
-    - ZendeskSDKStorage (~> 0.4.2)
-  - ZendeskSDKFayeClient (0.4.2):
-    - ZendeskSDKLogger (~> 0.4.2)
-    - ZendeskSDKSocketClient (~> 0.4.2)
-  - ZendeskSDKHTTPClient (0.5.1):
-    - ZendeskSDKLogger (~> 0.4.2)
-  - ZendeskSDKLogger (0.4.2)
-  - ZendeskSDKMessaging (1.2.1):
-    - ZendeskSDKConversationKit (~> 0.6.1)
-    - ZendeskSDKUIComponents (~> 0.6.1)
-  - ZendeskSDKSocketClient (0.4.2)
-  - ZendeskSDKStorage (0.4.2):
-    - ZendeskSDKLogger (~> 0.4.2)
-  - ZendeskSDKUIComponents (0.6.1)
+  - package_info_plus (0.4.5):
+    - Flutter
+  - path_provider_ios (0.0.1):
+    - Flutter
+  - "permission_handler (5.1.0+2)":
+    - Flutter
+  - PINCache (3.0.3):
+    - PINCache/Arc-exception-safe (= 3.0.3)
+    - PINCache/Core (= 3.0.3)
+  - PINCache/Arc-exception-safe (3.0.3):
+    - PINCache/Core
+  - PINCache/Core (3.0.3):
+    - PINOperation (~> 1.2.1)
+  - PINOperation (1.2.1)
+  - sensors (0.0.1):
+    - Flutter
+  - share (0.0.1):
+    - Flutter
+  - wakelock (0.0.1):
+    - Flutter
+  - ZendeskAnswerBotProvidersSDK (2.0.5):
+    - ZendeskSupportProvidersSDK (~> 5.0.5)
+  - ZendeskAnswerBotSDK (2.0.4):
+    - ZendeskAnswerBotProvidersSDK (~> 2.0.4)
+    - ZendeskMessagingSDK (~> 3.5.0)
+  - ZendeskChatProvidersSDK (2.6.0)
+  - ZendeskChatSDK (2.6.0):
+    - ZendeskChatProvidersSDK (~> 2.6.0)
+    - ZendeskMessagingSDK (~> 3.5.0)
+  - ZendeskCommonUISDK (4.5.0):
+    - ZendeskSDKConfigurationsSDK (~> 1.1.5)
+  - ZendeskCoreSDK (2.4.1)
+  - ZendeskMessagingAPISDK (3.5.0):
+    - ZendeskSDKConfigurationsSDK (~> 1.1.5)
+  - ZendeskMessagingSDK (3.5.0):
+    - ZendeskCommonUISDK (~> 4.5.0)
+    - ZendeskMessagingAPISDK (~> 3.5.0)
+  - ZendeskSDKConfigurationsSDK (1.1.8)
+  - ZendeskSupportProvidersSDK (5.0.5):
+    - ZendeskCoreSDK (~> 2.4.0)
+  - ZendeskSupportSDK (5.0.4):
+    - ZendeskMessagingSDK (~> 3.5.0)
+    - ZendeskSupportProvidersSDK (~> 5.0.4)
 
 DEPENDENCIES:
+  - better_player (from `.symlinks/plugins/better_player/ios`)
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_zendes_plugin (from `.symlinks/plugins/flutter_zendes_plugin/ios`)
+  - open_file (from `.symlinks/plugins/open_file/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - sensors (from `.symlinks/plugins/sensors/ios`)
+  - share (from `.symlinks/plugins/share/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
-    - ZendeskSDKConversationKit
-    - ZendeskSDKFayeClient
-    - ZendeskSDKHTTPClient
-    - ZendeskSDKLogger
-    - ZendeskSDKMessaging
-    - ZendeskSDKSocketClient
-    - ZendeskSDKStorage
-    - ZendeskSDKUIComponents
+    - Cache
+    - GCDWebServer
+    - HLSCachingReverseProxyServer
+    - PINCache
+    - PINOperation
+    - ZendeskAnswerBotProvidersSDK
+    - ZendeskAnswerBotSDK
+    - ZendeskChatProvidersSDK
+    - ZendeskChatSDK
+    - ZendeskCommonUISDK
+    - ZendeskCoreSDK
+    - ZendeskMessagingAPISDK
+    - ZendeskMessagingSDK
+    - ZendeskSDKConfigurationsSDK
+    - ZendeskSupportProvidersSDK
+    - ZendeskSupportSDK
 
 EXTERNAL SOURCES:
+  better_player:
+    :path: ".symlinks/plugins/better_player/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_zendes_plugin:
     :path: ".symlinks/plugins/flutter_zendes_plugin/ios"
+  open_file:
+    :path: ".symlinks/plugins/open_file/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+  sensors:
+    :path: ".symlinks/plugins/sensors/ios"
+  share:
+    :path: ".symlinks/plugins/share/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
+  better_player: 5f77b030c433bd39af0aaaffc184cf4267601a84
+  Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_zendes_plugin: 47e07f32efc28e3dfcac7803e31763f82049ddb1
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_zendes_plugin: cb94d4528f0b464c803121ee0a29240d3216bc74
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
+  HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
+  open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  ZendeskSDKConversationKit: d1f1eb90c89bef2044b0033eb8125563dd4c00d7
-  ZendeskSDKFayeClient: ef5e0e34c9f1ea259d09b93cfd340d1b705eb2ee
-  ZendeskSDKHTTPClient: 878cdd5bc2411f479388c3d0e2eb8b1d64d95b07
-  ZendeskSDKLogger: 5df5c8fcf0121309cf99c2473b906b6b45681cb3
-  ZendeskSDKMessaging: b4a82aeaf77b8b0dce2d89ce9f6597b71545fc88
-  ZendeskSDKSocketClient: f5548ce8e7e602ff6f0375bfd0998f734a3df8dd
-  ZendeskSDKStorage: 5111d319d5197bf9e57753109415a3eacddbd0db
-  ZendeskSDKUIComponents: 34f41ecfd0169b8ab0145c34efd87e88a8f3e5de
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
+  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
+  permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
+  PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
+  PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
+  sensors: 84eb7a30e47a649e4172b71d6e81be614c280336
+  share: 0b2c3e82132f5888bccca3351c504d0003b3b410
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  ZendeskAnswerBotProvidersSDK: 294a835f26545e5da4e0e9b168cceab8aca930c6
+  ZendeskAnswerBotSDK: 89b7121bf5a92d40c34f5c403a71cd907e406302
+  ZendeskChatProvidersSDK: d33ec9a1aa2b3ff136f4c3697d4cf1ce6cd804c8
+  ZendeskChatSDK: 8b0c8e5a526afbf3d081d219d15c092e4262ec0e
+  ZendeskCommonUISDK: 8b1f1ec6a93b651d5d3711efc6978983310d3168
+  ZendeskCoreSDK: 2dc9457ae01d024ca02f60f6134ad1ad90136c29
+  ZendeskMessagingAPISDK: cfb67be6765d04ffc36aea64488cce0e5e88941f
+  ZendeskMessagingSDK: de16036707b7623bacee7068009e121f823567f2
+  ZendeskSDKConfigurationsSDK: 8371b468db0d09e9198f6c5a97818826943ee1ee
+  ZendeskSupportProvidersSDK: d21ce8eb3df1066338c7d3875bb818b32c3f124e
+  ZendeskSupportSDK: 2ca9515f4c66080820052a912ecbce2f5e5866e4
 
-PODFILE CHECKSUM: 51cf704c0cb7f9518b29c0ce1649512025d7689a
+PODFILE CHECKSUM: 06cc93195df3f035959ea577ebcb7b04c43048c0
 
 COCOAPODS: 1.11.2
