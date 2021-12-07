@@ -23,70 +23,67 @@ struct ZendeskNavigationView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var withViewController: UIViewController
-
+    
     
     init(with _withViewController:UIViewController ) {
         //MARK: zendesk didn't change tabbar style by default
-//        coloredNavAppearance.configureWithOpaqueBackground()
-//        coloredNavAppearance.backgroundColor = .red
-//        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-//        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-//
-//        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
-//        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
+        //        coloredNavAppearance.configureWithOpaqueBackground()
+        //        coloredNavAppearance.backgroundColor = .red
+        //        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        //        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        //
+        //        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
+        //        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
         withViewController =  _withViewController
     }
-
+    
     @available(iOS 13.0.0, *)
     var body: some View {
-        NavigationView{
-           
-            if #available(iOS 14.0, *) {
-                contentMy
+        Color.init(hex: "922C3E")
+            .edgesIgnoringSafeArea(.top)
+            .overlay(
+                content
                     .hideNavigationBar()
-                    .ignoresSafeArea()
-               
-            } else {
-                contentMy
-                    .hideNavigationBar()
-            }
-            
-        }
+        )
     }
-    var contentMy: some View{
+    
+    var content: some View{
         GeometryReader { geometry in
-        VStack{
-            
             VStack{
-            Spacer()
-                .frame(height: 20)
                 
-            HStack{
-                
-                    Image(systemName: "arrow.left")
-                    .foregroundColor(.white)
-                            .frame(width: 40)
-                            .padding(.trailing, 10)
+                VStack{
+                    Spacer()
+                        .frame(height: 25)
+                    
+                    HStack{
+                        
+                        Image(systemName: "chevron.backward")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 10)
+                            .padding(.leading, 20)
                             .onTapGesture {
                                 withViewController.dismiss(animated: true, completion: nil)
                             }
-                
-                    Text("Contact Us").foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                
-                    Spacer()
-                            .frame(width: 40)
-                            .padding(.leading, 10)
-                                    
+                        
+                        Text("Contact Us")
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                        
+                        Spacer()
+                            .frame(width: 10)
+                            .padding(.trailing, 20)
+                        
+                    }
                 }
-            }
-                .frame(width: geometry.size.width, height: 62, alignment: .center)
+                .frame(width: geometry.size.width, height: 40, alignment: .center)
                 .background(Color.init(hex: "922C3E"))
-        
-            ZendeskControllerWrapper(withViewController: withViewController)
-                .frame(maxHeight: .infinity)
-                .allowsHitTesting(true)
-        }
+                
+                ZendeskControllerWrapper(withViewController: withViewController)
+                    .frame(maxHeight: .infinity)
+                    .allowsHitTesting(true)
+            }
         }.onAppear{
             
         }.onDisappear{
@@ -104,28 +101,28 @@ struct ZendeskNavigationView_Previews: PreviewProvider {
 
 struct ZendeskControllerWrapper: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIViewController
-//    let onNodeClick:((AVPlayer,ARData)->Void)
+    //    let onNodeClick:((AVPlayer,ARData)->Void)
     let withViewController: UIViewController
     class Coordinator: NSObject,UINavigationControllerDelegate {
         
         var parent: ZendeskControllerWrapper
-
+        
         init(_ parent: ZendeskControllerWrapper) {
             self.parent = parent
         }
     }
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
     
     @available(iOS 13.0, *)
     func makeUIViewController(context: UIViewControllerRepresentableContext<ZendeskControllerWrapper>) -> UIViewController {
-       
+        
         return withViewController
     }
     
-
+    
     @available(iOS 13.0, *)
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<ZendeskControllerWrapper>) {
     }

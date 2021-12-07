@@ -34,12 +34,12 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         
         switch call.method {
         case "getPlatformVersion":
-         
+            
             result("IOS")
         case "init":
             Logger.isEnabled = true
             Logger.defaultLevel = .verbose
-          
+            
             guard let dic = call.arguments as? Dictionary<String, Any> else { return }
             
             let accountKey = dic["accountKey"] as? String ?? ""
@@ -53,24 +53,24 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let email = dic["email"] as? String ?? ""
             let name = dic["name"] as? String ?? ""
             Zendesk.initialize(appId: applicationId,
-                clientId: clientId,
-                zendeskUrl: domainUrl)
-
+                               clientId: clientId,
+                               zendeskUrl: domainUrl)
+            
             Support.initialize(withZendesk: Zendesk.instance)
             AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
-
+            
             let idendity =  Identity.createJwt(token: authToken)
             Zendesk.instance?.setIdentity(idendity)
-//            let identity = Identity.createAnonymous(name: "Dmytro Diachenko", email: "testtest@test.com")
-//            Zendesk.instance?.setIdentity(identity)
-////
-//            //V1 Chat
-//            ZDCChat.initialize(withAccountKey: accountKey)
-//            ZDCChat.updateVisitor { user in
-//                user?.phone = phone
-//                user?.name = name
-//                user?.email = email
-//            }
+            //            let identity = Identity.createAnonymous(name: "Dmytro Diachenko", email: "testtest@test.com")
+            //            Zendesk.instance?.setIdentity(identity)
+            ////
+            //            //V1 Chat
+            //            ZDCChat.initialize(withAccountKey: accountKey)
+            //            ZDCChat.updateVisitor { user in
+            //                user?.phone = phone
+            //                user?.name = name
+            //                user?.email = email
+            //            }
             //CHAT V2 SDK
             Chat.initialize(accountKey: accountKey)
             result("iOS init completed" )
@@ -83,7 +83,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let email = dic["email"] as? String ?? ""
             let name = dic["name"] as? String ?? ""
             let department = dic["departmentName"] as? String ?? ""
-           
+            
             setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
             print(Chat.instance?.profileProvider.visitorInfo);
             do {
@@ -127,41 +127,41 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         
         let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
         
-//        ZDCChat.start(in: navigationController, withConfig: {config in
-//            config?.preChatDataRequirements.name = .notRequired
-//            config?.preChatDataRequirements.email = .notRequired
-//            config?.preChatDataRequirements.phone = .requiredEditable
-//        })
-//
-////         Hides the back button because we are in a tab controller
-//                ZDCChat.instance().chatViewController.navigationItem.hidesBackButton = true
+        //        ZDCChat.start(in: navigationController, withConfig: {config in
+        //            config?.preChatDataRequirements.name = .notRequired
+        //            config?.preChatDataRequirements.email = .notRequired
+        //            config?.preChatDataRequirements.phone = .requiredEditable
+        //        })
+        //
+        ////         Hides the back button because we are in a tab controller
+        //                ZDCChat.instance().chatViewController.navigationItem.hidesBackButton = true
     }
     
     func setVisitorInfo(name:String,email:String,phoneNumber: String,departmentName: String,tags:Array<String>) -> Void {
-//        Chat.instance?.clearCache()
-//        Chat.instance?.resetIdentity(nil)
-//        print("indentity \(Chat.instance?.hasIdentity)")
+        //        Chat.instance?.clearCache()
+        //        Chat.instance?.resetIdentity(nil)
+        //        print("indentity \(Chat.instance?.hasIdentity)")
         let visitorInfo = VisitorInfo.init(name: name, email: email, phoneNumber: phoneNumber)
-            let chatAPIConfiguration = ChatAPIConfiguration()
-//            chatAPIConfiguration.tags = ["support"]
-            chatAPIConfiguration.visitorInfo = visitorInfo
-//            chatAPIConfiguration.department = "Support"
-         Chat.instance?.configuration = chatAPIConfiguration
-                    var token: ChatProvidersSDK.ObservationToken?
-                      token = Chat.connectionProvider?.observeConnectionStatus { status in
-                          guard status.isConnected else { return }
-        
-                          Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: nil)
-                          Chat.profileProvider?.setNote("Visitor from Jasper app")
-                          token?.cancel() // Ensure call only happens once
-                      }
+        let chatAPIConfiguration = ChatAPIConfiguration()
+        //            chatAPIConfiguration.tags = ["support"]
+        chatAPIConfiguration.visitorInfo = visitorInfo
+        //            chatAPIConfiguration.department = "Support"
+        Chat.instance?.configuration = chatAPIConfiguration
+        var token: ChatProvidersSDK.ObservationToken?
+        token = Chat.connectionProvider?.observeConnectionStatus { status in
+            guard status.isConnected else { return }
+            
+            Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: nil)
+            Chat.profileProvider?.setNote("Visitor from Jasper app")
+            token?.cancel() // Ensure call only happens once
         }
+    }
     
     func startChatV2(botLabel:String) throws {
         let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .optional)
-//
+        //
         let chatConfiguration = ChatConfiguration()
-
+        
         //If true, visitors will be prompted at the end of their chat asking them whether they would like a transcript sent by email.
         chatConfiguration.isChatTranscriptPromptEnabled = true
         //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
@@ -171,18 +171,18 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
         chatConfiguration.isAgentAvailabilityEnabled = true
         //This property allows you to configure the requirements of each of the pre-chat form fields.
-
+        
         chatConfiguration.preChatFormConfiguration = chatFormConfiguration
         // Name for Bot messages
         let messagingConfiguration = MessagingConfiguration()
         messagingConfiguration.name = botLabel
         
-
+        
         let chatEngine = try ChatEngine.engine()
         
         CommonTheme.currentTheme.primaryColor = UIColor.red
         var viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
-
+        
         if #available(iOS 13.0.0, *) {
             viewController = UIHostingController(rootView: ZendeskNavigationView(with: viewController).body)
         } else {
@@ -192,14 +192,14 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         Chat.connectionProvider?.observeConnectionStatus({ s in
             print("connections tstaus: \(s)")
         })
-
+        
         if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
-
+            
             viewController.modalPresentationStyle = .fullScreen
             navigationController.present(viewController, animated: true, completion: nil)
         }
     }
-
+    
     
 }
 
