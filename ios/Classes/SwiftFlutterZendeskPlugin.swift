@@ -13,11 +13,11 @@ import SupportProvidersSDK
 
 import AnswerBotProvidersSDK
 import AnswerBotSDK
-//import ZDCChat
 // ViewController and engines
-
+import SwiftUI
 // Theme
 import CommonUISDK
+import SwiftUI
 
 public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
@@ -181,55 +181,25 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         let chatEngine = try ChatEngine.engine()
         
         CommonTheme.currentTheme.primaryColor = UIColor.red
+        var viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
 
-        let viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
-        
+        if #available(iOS 13.0.0, *) {
+            viewController = UIHostingController(rootView: ZendeskNavigationView(with: viewController).body)
+        } else {
+            
+        }
         
         Chat.connectionProvider?.observeConnectionStatus({ s in
             print("connections tstaus: \(s)")
         })
 
         if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
-          
-           
-            self.presentViewController(rootViewController: navigationController, view: viewController);
+
+            viewController.modalPresentationStyle = .fullScreen
+            navigationController.present(viewController, animated: true, completion: nil)
         }
     }
-    
-    
-    func presentViewController(rootViewController: UIViewController?, view: UIViewController) {
-    
-       
-           if (rootViewController is UINavigationController) {
-               let root = (rootViewController as! UINavigationController)
-               
-//               root.present(view, animated: true, completion: nil)
-               root.pushViewController(view, animated: true)
-           } else {
-               if #available(iOS 13.0, *) {
-                    if var topController = UIApplication.shared.keyWindow?.rootViewController  {
-                          while let presentedViewController = topController.presentedViewController {
-                                topController = presentedViewController
-                               }
-                    topController.present(view, animated: true, completion: nil)
-               }
 
-           }
-       }
-  
-       }
     
-}
-
-extension Bundle {
-    public var appIcon: UIImage? {
-        if let appIcons = infoDictionary?["CFBundleIcons"] as? [String: Any],
-            let primaryAppIcon = appIcons["CFBundlePrimaryIcon"] as? [String: Any],
-            let appIconFiles = primaryAppIcon["CFBundleIconFiles"] as? [String],
-            let lastAppIcon = appIconFiles.last {
-            return UIImage(named:lastAppIcon)
-        }
-        return nil
-    }
 }
 
