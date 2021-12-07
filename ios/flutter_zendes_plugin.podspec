@@ -22,29 +22,12 @@ A Zendes Flutter plugin.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
 
   s.swift_version = '5.0'
-  #s.dependency 'ZendeskSupportSDK'
-  s.dependency 'ZendeskSupportProvidersSDK'
-  #s.dependency 'ZendeskSDKMessaging'
-  
-  s.dependency 'ZendeskAnswerBotSDK' # AnswerBot-only on the Unified SDK
+  s.dependency 'ZendeskSupportProvidersSDK'  
+  s.dependency 'ZendeskAnswerBotSDK'
  
   #s.dependency 'ZDCChat'
   s.dependency 'ZendeskSupportSDK'
-  #s.dependency 'ZendeskSDKSocketClient', '0.4.2'
-  
- #s.ios.vendored_frameworks = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ZendeskChatSDK.framework', '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ZendeskChatProvidersSDK.framework'
-
-  #s.vendored_frameworks = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ZendeskChatSDK.framework', '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ZendeskChatProvidersSDK.framework'
-  #s.source = { :git => 'file:///Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/'}
-  #s.dependency 'ZendeskChatProvidersSDK'
   s.dependency 'ZendeskChatSDK'#, '2.11.1'
   
-  s.subspec 'ZendeskChatSDK' do |ss| 
-   ss.source_files = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_sdk_ios-master/ChatSDK.framework/**/*.{h,m}' 
-  end
-
-  s.subspec 'ZendeskChatProvidersSDK' do |ss| 
-    ss.source_files = '~/Users/dmitrydyachenko/Downloads/zdplugin/ios/chat_providers_sdk_ios-master/ChatProvidersSDK.framework/**/*.{h,m}' 
-  end
   
 end

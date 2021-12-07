@@ -1,4 +1,3 @@
-import 'package:alice/alice.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -16,29 +15,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   String _platformVersion = 'Unknown';
-  // String _accountKey = '41a747b5-7d23-4876-85bb-89ff555ec0bf';
-  // String _applicationId = 'be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d';
-  // String _clientId = 'mobile_sdk_client_2bb73df48f963be15710';
-  // String _domainUrl = 'https://hellojasper.zendesk.com';
-  //93de026d461300bdcfd985918a22cdd4e0411d94ba5aff52d46d8e5cbc3ffec1
-  // String _platformVersion = 'Unknown';
   String _accountKey = 'swbZZ0fqjxlp0slJRNfBD2qp8FYEDXri';
-  String _applicationId = 'dcc73c89a0d6c3c05de0729f05d9c78bc867ca164e743ee6';
-  String _clientId = 'mobile_sdk_client_7211ae5f16806b37b91f';
-  String _domainUrl = 'https://testdomainmydomaintestetstghhelp.zendesk.com';
+  String _applicationId = 'be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d';
+  String _clientId = 'mobile_sdk_client_2bb73df48f963be15710';
+  String _domainUrl = 'https://hellojasper.zendesk.com';
   FlutterZendeskPlugin _flutterPlugin = FlutterZendeskPlugin();
-  Alice alice;
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
-
-    alice = Alice(
-      showNotification: false,
-      showInspectorOnShake: true,
-      darkTheme: false,
-      maxCallsCount: 1000,
-    );
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -87,7 +73,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: alice.getNavigatorKey(),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),

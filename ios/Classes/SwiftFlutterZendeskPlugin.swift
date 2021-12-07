@@ -25,7 +25,6 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-       
         let channel = FlutterMethodChannel(name: "flutter_zendes_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterZendeskPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
@@ -53,13 +52,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let phone = dic["phone"] as? String ?? ""
             let email = dic["email"] as? String ?? ""
             let name = dic["name"] as? String ?? ""
-//            postAction(url: domainUrl)
-//            Zendesk.initialize(appId: applicationId,
-//                clientId: clientId,
-//                zendeskUrl: domainUrl)
-            Zendesk.initialize(appId: "be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d",
-                clientId: "mobile_sdk_client_2bb73df48f963be15710",
-                zendeskUrl: "https://hellojasper.zendesk.com")
+            Zendesk.initialize(appId: applicationId,
+                clientId: clientId,
+                zendeskUrl: domainUrl)
 
             Support.initialize(withZendesk: Zendesk.instance)
             AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
@@ -111,7 +106,6 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             
             rootViewController?.pushViewController(viewController, animated: true)
         case "requestListView":
-            setVisitorInfo(name: "name", email: "email", phoneNumber: "34235435", departmentName: "Support", tags: [])
             let rootViewController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController
             
             let viewController = RequestUi.buildRequestList(with: [])
@@ -189,18 +183,17 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         CommonTheme.currentTheme.primaryColor = UIColor.red
 
         let viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
-       
-
+        
+        
         Chat.connectionProvider?.observeConnectionStatus({ s in
             print("connections tstaus: \(s)")
         })
 
-            let rootViewController = UIApplication.shared.windows.filter({ (w) -> Bool in
-                      return w.isHidden == false
-                  }).first?.rootViewController
-
-            self.presentViewController(rootViewController: rootViewController, view: viewController);
-        
+        if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
+          
+           
+            self.presentViewController(rootViewController: navigationController, view: viewController);
+        }
     }
     
     
@@ -209,17 +202,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
        
            if (rootViewController is UINavigationController) {
                let root = (rootViewController as! UINavigationController)
-               view.tabBarController?.tabBar.tintColor = UIColor.red
-               view.tabBarController?.tabBar.backgroundColor = UIColor.green
-               view.tabBarController?.tabBar.barTintColor = UIColor.yellow
-               view.tabBarController?.tabBar.isTranslucent = false
-//               UITabBar.appearance().tintColor = UIColor.brown
-//               UITabBar.appearance().backgroundColor = UIColor.red
-//               UITabBar.appearance().barTintColor = UIColor.red
-               let tabBarAppearance = UITabBar.appearance()
-               tabBarAppearance.isTranslucent = false
-               tabBarAppearance.barTintColor = UIColor.red
-               tabBarAppearance.backgroundColor = UIColor.red
+               
 //               root.present(view, animated: true, completion: nil)
                root.pushViewController(view, animated: true)
            } else {

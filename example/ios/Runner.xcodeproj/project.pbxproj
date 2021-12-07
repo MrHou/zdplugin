@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -175,8 +175,6 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				13273556275B91C300680CD1 /* XCRemoteSwiftPackageReference "chat_providers_sdk_ios" */,
-				13273559275B91CB00680CD1 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -588,25 +586,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		13273556275B91C300680CD1 /* XCRemoteSwiftPackageReference "chat_providers_sdk_ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zendesk/chat_providers_sdk_ios";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-		13273559275B91CB00680CD1 /* XCRemoteSwiftPackageReference "chat_sdk_ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/zendesk/chat_sdk_ios.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
