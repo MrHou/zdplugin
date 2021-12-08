@@ -21,9 +21,6 @@ import SwiftUI
 
 public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
     
-    var authToken = "{\"id\": \"73e75714-bbf7-4596-8212-8b0164f1ed97\", \"hash\": \"bb5bcaebddd7f5c956235bf05d13cdd2c20e6004a546e2b73a351b4b15fa5feb\"}"
-    
-    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_zendes_plugin", binaryMessenger: registrar.messenger())
         let instance = SwiftFlutterZendeskPlugin()
@@ -46,12 +43,12 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let applicationId = dic["applicationId"] as? String ?? ""
             let clientId = dic["clientId"] as? String ?? ""
             let domainUrl = dic["domainUrl"] as? String ?? ""
-            let emailIdentifier = dic["emailIdentifier"] as? String ?? "emailIdentifier"
-            let nameIdentifier = dic["nameIdentifier"] as? String ?? "nameIdentifier"
+            let jwtToken = dic["jwtToken"] as? String ?? ""
             
-            let phone = dic["phone"] as? String ?? ""
-            let email = dic["email"] as? String ?? ""
-            let name = dic["name"] as? String ?? ""
+            if(accountKey.isEmpty || applicationId.isEmpty || clientId.isEmpty || domainUrl.isEmpty || jwtToken.isEmpty ){
+                result(false)
+                return;
+            }
             Zendesk.initialize(appId: applicationId,
                                clientId: clientId,
                                zendeskUrl: domainUrl)
@@ -59,7 +56,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             Support.initialize(withZendesk: Zendesk.instance)
             AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
             
-            let idendity =  Identity.createJwt(token: authToken)
+            let idendity =  Identity.createJwt(token: jwtToken)
             Zendesk.instance?.setIdentity(idendity)
             //            let identity = Identity.createAnonymous(name: "Dmytro Diachenko", email: "testtest@test.com")
             //            Zendesk.instance?.setIdentity(identity)
@@ -73,7 +70,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             //            }
             //CHAT V2 SDK
             Chat.initialize(accountKey: accountKey)
-            result("iOS init completed" )
+            result(true)
         case "startChatV1":
             startChatV1()
         case "startChatV2":
@@ -83,11 +80,16 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let email = dic["email"] as? String ?? ""
             let name = dic["name"] as? String ?? ""
             let department = dic["departmentName"] as? String ?? ""
+            let toolbarTitle = dic["toolbarTitle"] as? String ?? ""
+            let endChatSwitch = dic["endChatSwitch"] as? String ?? ""
+            let iosToolbarHashColor = dic["iosToolbarHashColor"] as? String ?? "#922C3E"
+            
+            
             
             setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
             print(Chat.instance?.profileProvider.visitorInfo);
             do {
-                try startChatV2(botLabel: botLabel)
+                try startChatV2(botLabel: botLabel, iosToolbarHashColor: iosToolbarHashColor,iosToolbarName: toolbarTitle)
             } catch let error{
                 print("error:\(error)")
             }
@@ -143,10 +145,11 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //        print("indentity \(Chat.instance?.hasIdentity)")
         let visitorInfo = VisitorInfo.init(name: name, email: email, phoneNumber: phoneNumber)
         let chatAPIConfiguration = ChatAPIConfiguration()
-        //            chatAPIConfiguration.tags = ["support"]
+        //chatAPIConfiguration.tags = ["support"]
         chatAPIConfiguration.visitorInfo = visitorInfo
-        //            chatAPIConfiguration.department = "Support"
+//        chatAPIConfiguration.department = departmentName
         Chat.instance?.configuration = chatAPIConfiguration
+        
         var token: ChatProvidersSDK.ObservationToken?
         token = Chat.connectionProvider?.observeConnectionStatus { status in
             guard status.isConnected else { return }
@@ -157,7 +160,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func startChatV2(botLabel:String) throws {
+    func startChatV2(botLabel:String, iosToolbarHashColor: String,iosToolbarName: String) throws {
         let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .optional)
         //
         let chatConfiguration = ChatConfiguration()
@@ -183,8 +186,8 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         CommonTheme.currentTheme.primaryColor = UIColor.red
         var viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
         
-        if #available(iOS 13.0.0, *) {
-            viewController = UIHostingController(rootView: ZendeskNavigationView(with: viewController).body)
+        if #available(iOS 14.0, *) {
+            viewController = UIHostingController(rootView: ZendeskNavigationView(with: viewController, toolbarHashColor: iosToolbarHashColor, toolbarName: iosToolbarName).body)
         } else {
             
         }

@@ -30,7 +30,8 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private lateinit var activity: Activity
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "flutter_zendes_plugin")
+        channel =
+            MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "flutter_zendes_plugin")
         channel.setMethodCallHandler(this);
     }
 
@@ -69,108 +70,115 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 val accountKey = call.argument<String>("accountKey") ?: ""
                 val applicationId = call.argument<String>("applicationId") ?: ""
                 val clientId = call.argument<String>("clientId") ?: ""
-                val zendeskUrl = call.argument<String>("domainUrl") ?: ""
-                val nameIdentifier = call.argument<String>("nameIdentifier") ?: "nameIdentifier"
-                val emailIdentifier = call.argument<String>("emailIdentifier") ?: "emailIdentifier"
-                if (TextUtils.isEmpty(accountKey)) {
-                    result.error("ACCOUNT_KEY_NULL", "AccountKey is null !", "AccountKey is null !")
+                val domainUrl = call.argument<String>("domainUrl") ?: ""
+                val jwtToken = call.argument<String>("jwtToken") ?: ""
+                if (TextUtils.isEmpty(domainUrl) || TextUtils.isEmpty(accountKey) || TextUtils.isEmpty(
+                        clientId
+                    ) || TextUtils.isEmpty(applicationId) || TextUtils.isEmpty(jwtToken)
+                ) {
+                    result.success(false)
+//                    result.error("ACCOUNT_KEY_NULL", "AccountKey is null !", "AccountKey is null !")
+                    return;
                 }
 
                 //1.Zendes SDK
-                Zendesk.INSTANCE.init(activity,
-                        zendeskUrl,
-                        applicationId,
-                        clientId)
+                Zendesk.INSTANCE.init(
+                    activity,
+                    domainUrl,
+                    applicationId,
+                    clientId
+                )
                 //2.Support SDK init
                 Support.INSTANCE.init(Zendesk.INSTANCE)
 
                 //3.setIdentity
-
-                val testToken ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2Mzg0NTI3NTMsImp0aSI6IjNkMmUzZDdkLWY4YTAtNDc3OC1iYWVhLTA5OTE0YWJkZmNmMiIsImVtYWlsIjoidGVzdHRlc3RAdGVzdC5jb20iLCJuYW1lIjoiRCBEaWFjbmtvIiwiZXh0ZXJuYWxfaWQiOiI5OGJjNTE5ZS05ZWFmLTRkNzAtYmVkOS1lNjY4OTk2NTNlOGYiLCJwaG9uZSI6IisxMzEyMzEyMzEyMyIsInJvbGUiOiJhZG1pbiIsInVzZXJfZmllbGRzIjp7InByaW1hcnlfam91cm5leV9pZCI6IjNlYzAzNDRlLWYyNzQtNDRmZC1iYzA0LWI2ODdkMmIzMjY2MyJ9fQ.O-Aet7I63p2DieU0vUYMIavt9Wa0GzdFPwBKJkU5NNIЭ"
-                        val identity: Identity = JwtIdentity(testToken)
-//                    val identity: Identity =AnonymousIdentity.Builder()
-//                    .withNameIdentifier(nameIdentifier)
-//                    .withEmailIdentifier(emailIdentifier)
-//                    .build()
+                val identity: Identity = JwtIdentity(jwtToken)
                 Zendesk.INSTANCE.setIdentity(identity)
 
-
-                Zendesk.INSTANCE.setIdentity(identity)
                 //4.Chat SDK
-                Chat.INSTANCE.init(activity, accountKey, applicationId)
-               
-//                Chat.INSTANCE.setIdentity(JwtAuthenticator {
-//                    it.onTokenLoaded(testToken)
-//                })
-                result.success("Init completed!")
+                Chat.INSTANCE.init(activity, accountKey)
+                result.success(true)
             }
             "startChatV2" -> {
                 val phone = call.argument<String>("phone") ?: ""
                 val email = call.argument<String>("email") ?: ""
                 val name = call.argument<String>("name") ?: ""
-                val botLabel = call.argument<String>("botLabel")
+                val botLabel = call.argument<String>("botLabel") ?: "Jasper"
                 val toolbarTitle = call.argument<String>("toolbarTitle")
                 val endChatSwitch = call.argument<Boolean>("endChatSwitch") ?: true
-                val departmentName = call.argument<String>("departmentName") ?: "Support"
+                val departmentName = call.argument<String>("departmentName") ?: ""
+                //MARK: now we don't have bot image from, only from platform
                 val botAvatar = call.argument<Int>("botAvatar") ?: R.drawable.zui_avatar_bot_default
                 val profileProvider = Chat.INSTANCE.providers()?.profileProvider()
                 val chatProvider = Chat.INSTANCE.providers()?.chatProvider()
 
-                var isPre = false;
-                if (TextUtils.isEmpty(phone)) {
-                    isPre = true;
-                }
-                val visitorInfo = VisitorInfo.builder().withName(name).withEmail(email).withPhoneNumber(phone).build()
+                val visitorInfo =
+                    VisitorInfo
+                        .builder()
+                        .withName(name)
+                        .withEmail(email)
+                        .withPhoneNumber(phone)
+                        .build()
+
                 profileProvider?.setVisitorInfo(visitorInfo, null)
-                profileProvider?.setVisitorNote("Name : $name ; Phone: $phone", null)
-                chatProvider?.setDepartment(departmentName, null)
+                profileProvider?.setVisitorNote("Name : $name , Phone: $phone")
+//                chatProvider?.setDepartment(departmentName, null)
+
+//                Chat.INSTANCE.providers()?.connectionProvider()?.observeConnectionStatus(ObservationScope(), object : Observer<ConnectionStatus> {
+//                   override  fun update(connectionStatus: ConnectionStatus) {
+//                        if (connectionStatus == ConnectionStatus.CONNECTED) {
+//                            profileProvider?.setVisitorInfo(visitorInfo, null)
+//                        }
+//                    }
+//                })
                 val chatConfigurationBuilder = ChatConfiguration.builder();
                 chatConfigurationBuilder
-                        //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-                        .withAgentAvailabilityEnabled(true)
-                        //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
-                        .withTranscriptEnabled(true)
-                        .withOfflineFormEnabled(true)
-                        //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-                        .withPreChatFormEnabled(true)
-                        .withNameFieldStatus(PreChatFormFieldStatus.REQUIRED)
-                        .withEmailFieldStatus(PreChatFormFieldStatus.REQUIRED)
-                        .withPhoneFieldStatus(PreChatFormFieldStatus.REQUIRED)
-                        .withDepartmentFieldStatus(PreChatFormFieldStatus.REQUIRED)
+                    //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
+                    .withAgentAvailabilityEnabled(true)
+                    //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
+                    .withTranscriptEnabled(true)
+                    .withOfflineFormEnabled(true)
+                    //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
+                    .withPreChatFormEnabled(false)
+                    .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withPhoneFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
                 if (!endChatSwitch) {
                     chatConfigurationBuilder.withChatMenuActions(ChatMenuAction.CHAT_TRANSCRIPT)
                 }
                 val chatConfiguration = chatConfigurationBuilder.build();
 
                 MessagingActivity.builder()
-                        .withBotLabelString(botLabel)
-                        .withBotAvatarDrawable(botAvatar)
-                        .withToolbarTitle(toolbarTitle)
-                        .withEngines(ChatEngine.engine())
-                        .show(activity, chatConfiguration)
+                    .withBotLabelString(botLabel)
+                    .withBotAvatarDrawable(botAvatar)
+                    .withToolbarTitle(toolbarTitle)
+                    .withEngines(ChatEngine.engine())
+                    .show(activity, chatConfiguration)
 
             }
             "helpCenter" -> {
                 val categoriesCollapsed = call.argument<Boolean>("categoriesCollapsed") ?: false
                 val contactUsButtonVisible = call.argument<Boolean>("contactUsButtonVisible")
-                        ?: true
-                val showConversationsMenuButton = call.argument<Boolean>("showConversationsMenuButton")
+                    ?: true
+                val showConversationsMenuButton =
+                    call.argument<Boolean>("showConversationsMenuButton")
                         ?: true
                 val helpCenterConfig: Configuration = HelpCenterActivity.builder()
-                        .withCategoriesCollapsed(categoriesCollapsed)
-                        .withContactUsButtonVisible(contactUsButtonVisible)
-                        .withShowConversationsMenuButton(showConversationsMenuButton)
-                        .config()
+                    .withCategoriesCollapsed(categoriesCollapsed)
+                    .withContactUsButtonVisible(contactUsButtonVisible)
+                    .withShowConversationsMenuButton(showConversationsMenuButton)
+                    .config()
                 HelpCenterActivity.builder()
-                        .show(activity, helpCenterConfig)
+                    .show(activity, helpCenterConfig)
             }
             "requestView" -> {
                 RequestActivity.builder()
-                        .show(activity);
+                    .show(activity);
             }
             "requestListView" -> {
                 RequestListActivity.builder()
-                        .show(activity);
+                    .show(activity);
             }
             "changeNavStatus" -> {
 

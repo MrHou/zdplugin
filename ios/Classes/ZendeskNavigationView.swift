@@ -15,17 +15,18 @@ import SDKConfigurations
 import ZendeskCoreSDK
 import CommonUISDK
 
-@available(iOS 13.0, *)
+@available(iOS 14.0, *)
 let coloredNavAppearance = UINavigationBarAppearance()
 
-@available(iOS 13.0.0, *)
+@available(iOS 14.0, *)
 struct ZendeskNavigationView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var withViewController: UIViewController
+    var toolbarHashColor: String
+    var toolbarName:String
     
-    
-    init(with _withViewController:UIViewController ) {
+    init(with _withViewController:UIViewController, toolbarHashColor _toolbarHashColor:String, toolbarName _toolbarName:String ) {
         //MARK: zendesk didn't change tabbar style by default
         //        coloredNavAppearance.configureWithOpaqueBackground()
         //        coloredNavAppearance.backgroundColor = .red
@@ -35,16 +36,18 @@ struct ZendeskNavigationView: View {
         //        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
         //        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
         withViewController =  _withViewController
+        toolbarName = _toolbarName
+        toolbarHashColor = _toolbarHashColor
     }
     
-    @available(iOS 13.0.0, *)
+    @available(iOS 14.0, *)
     var body: some View {
-        Color.init(hex: "922C3E")
+        Color.init(hex: toolbarHashColor)
             .edgesIgnoringSafeArea(.top)
             .overlay(
                 content
                     .hideNavigationBar()
-        )
+            )
     }
     
     var content: some View{
@@ -62,27 +65,32 @@ struct ZendeskNavigationView: View {
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(width: 10)
-                            .padding(.leading, 20)
+                            .padding(.leading, 15)
                             .onTapGesture {
                                 withViewController.dismiss(animated: true, completion: nil)
                             }
                         
-                        Text("Contact Us")
+                        Text(toolbarName)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                         
                         Spacer()
                             .frame(width: 10)
-                            .padding(.trailing, 20)
+                            .padding(.trailing, 15)
                         
                     }
+                    Spacer()
+                        .frame(height: 5)
                 }
-                .frame(width: geometry.size.width, height: 40, alignment: .center)
-                .background(Color.init(hex: "922C3E"))
+                .frame(width: geometry.size.width, height: 50, alignment: .top)
+                .background(Color.init(hex: toolbarHashColor))
+                
                 
                 ZendeskControllerWrapper(withViewController: withViewController)
-                    .frame(maxHeight: .infinity)
+                    .ignoresSafeArea(.keyboard)
+                    .frame(height: .infinity)
                     .allowsHitTesting(true)
+                
             }
         }.onAppear{
             
@@ -92,10 +100,10 @@ struct ZendeskNavigationView: View {
     }
 }
 
-@available(iOS 13.0.0, *)
+@available(iOS 14.0, *)
 struct ZendeskNavigationView_Previews: PreviewProvider {
     static var previews: some View {
-        ZendeskNavigationView(with: UIViewController())
+        ZendeskNavigationView(with: UIViewController(), toolbarHashColor: "", toolbarName: "")
     }
 }
 
