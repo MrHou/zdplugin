@@ -63,9 +63,9 @@ struct ZendeskNavigationView: View {
                         Image(systemName: "arrow.backward")
                             .resizable()
                             .scaledToFit()
+                            .foregroundColor(Color.black)
                         //MARK: should be refactored
-                            .foregroundColor(toolbarColor)
-                            .colorInvert()
+                        //                            .colorInvert()
                             .frame(width: 15)
                             .padding(.leading, 15)
                             .onTapGesture {
@@ -73,9 +73,9 @@ struct ZendeskNavigationView: View {
                             }
                         
                         Text(toolbarName)
+                            .foregroundColor(Color.black)
                         //MARK: should be refactored
-                            .foregroundColor(toolbarColor)
-                            .colorInvert()
+                        //                            .colorInvert()
                             .frame(maxWidth: .infinity)
                         
                         Spacer()
