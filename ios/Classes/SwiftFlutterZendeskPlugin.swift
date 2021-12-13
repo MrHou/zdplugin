@@ -82,7 +82,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let department = dic["departmentName"] as? String ?? ""
             let toolbarTitle = dic["toolbarTitle"] as? String ?? ""
             let endChatSwitch = dic["endChatSwitch"] as? String ?? ""
-            let iosToolbarHashColor = dic["iosToolbarHashColor"] as? String ?? "#922C3E"
+            let iosToolbarHashColor = dic["iosToolbarHashColor"] as? String ?? "#000000"
             
             
             
@@ -147,7 +147,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         let chatAPIConfiguration = ChatAPIConfiguration()
         //chatAPIConfiguration.tags = ["support"]
         chatAPIConfiguration.visitorInfo = visitorInfo
-//        chatAPIConfiguration.department = departmentName
+        //        chatAPIConfiguration.department = departmentName
         Chat.instance?.configuration = chatAPIConfiguration
         
         var token: ChatProvidersSDK.ObservationToken?
@@ -183,7 +183,10 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         
         let chatEngine = try ChatEngine.engine()
         
-        CommonTheme.currentTheme.primaryColor = UIColor.red
+        //MARK: should be refactored
+        CommonTheme.currentTheme.primaryColor = UIColor.black
+        
+        
         var viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
         
         if #available(iOS 14.0, *) {
@@ -199,7 +202,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
             
             viewController.modalPresentationStyle = .fullScreen
-            navigationController.present(viewController, animated: true, completion: nil)
+            navigationController.present(viewController, animated: false, completion: nil)
         }
     }
     

@@ -23,7 +23,7 @@ struct ZendeskNavigationView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
     var withViewController: UIViewController
-    var toolbarHashColor: String
+    var toolbarColor: Color
     var toolbarName:String
     
     init(with _withViewController:UIViewController, toolbarHashColor _toolbarHashColor:String, toolbarName _toolbarName:String ) {
@@ -37,12 +37,12 @@ struct ZendeskNavigationView: View {
         //        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
         withViewController =  _withViewController
         toolbarName = _toolbarName
-        toolbarHashColor = _toolbarHashColor
+        toolbarColor = Color.init(hex: _toolbarHashColor)
     }
     
     @available(iOS 14.0, *)
     var body: some View {
-        Color.init(hex: toolbarHashColor)
+        toolbarColor
             .edgesIgnoringSafeArea(.top)
             .overlay(
                 content
@@ -60,22 +60,26 @@ struct ZendeskNavigationView: View {
                     
                     HStack{
                         
-                        Image(systemName: "chevron.backward")
+                        Image(systemName: "arrow.backward")
                             .resizable()
                             .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(width: 10)
+                        //MARK: should be refactored
+                            .foregroundColor(toolbarColor)
+                            .colorInvert()
+                            .frame(width: 15)
                             .padding(.leading, 15)
                             .onTapGesture {
-                                withViewController.dismiss(animated: true, completion: nil)
+                                withViewController.dismiss(animated: false, completion: nil)
                             }
                         
                         Text(toolbarName)
-                            .foregroundColor(.white)
+                        //MARK: should be refactored
+                            .foregroundColor(toolbarColor)
+                            .colorInvert()
                             .frame(maxWidth: .infinity)
                         
                         Spacer()
-                            .frame(width: 10)
+                            .frame(width: 15)
                             .padding(.trailing, 15)
                         
                     }
@@ -83,7 +87,7 @@ struct ZendeskNavigationView: View {
                         .frame(height: 5)
                 }
                 .frame(width: geometry.size.width, height: 50, alignment: .top)
-                .background(Color.init(hex: toolbarHashColor))
+                .background(toolbarColor)
                 
                 
                 ZendeskControllerWrapper(withViewController: withViewController)

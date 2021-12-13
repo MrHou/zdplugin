@@ -42,7 +42,7 @@ class FlutterZendeskPlugin {
     String? toolbarTitle,
     bool? endChatSwitch,
     String? departmentName,
-    String? iosToolbarHashColor = "#922C3E",
+    String? iosToolbarHashColor,
   }) async {
     return await _channel.invokeMethod('startChatV2', <String, dynamic>{
       'phone': phone,

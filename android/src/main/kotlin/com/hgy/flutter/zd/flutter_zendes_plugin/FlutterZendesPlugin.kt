@@ -108,7 +108,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 val endChatSwitch = call.argument<Boolean>("endChatSwitch") ?: true
                 val departmentName = call.argument<String>("departmentName") ?: ""
                 //MARK: now we don't have bot image from, only from platform
-                val botAvatar = call.argument<Int>("botAvatar") ?: R.drawable.zui_avatar_bot_default
+                val botAvatar = call.argument<Int>("botAvatar") ?: 0//R.drawable.zui_avatar_bot_default
                 val profileProvider = Chat.INSTANCE.providers()?.profileProvider()
                 val chatProvider = Chat.INSTANCE.providers()?.chatProvider()
 
@@ -137,9 +137,9 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .withAgentAvailabilityEnabled(true)
                     //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
                     .withTranscriptEnabled(true)
-                    .withOfflineFormEnabled(true)
                     //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
                     .withPreChatFormEnabled(false)
+                    .withOfflineFormEnabled(true)
                     .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
                     .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
                     .withPhoneFieldStatus(PreChatFormFieldStatus.OPTIONAL)
