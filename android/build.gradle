@@ -19,6 +19,8 @@ rootProject.allprojects {
         google()
         jcenter()
         maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+        //MARK: for linter on local machine only
+//        maven { url "https://storage.googleapis.com/download.flutter.io"}
     }
 }
 
@@ -42,7 +44,10 @@ android {
 dependencies {
     //noinspection GradleDependency
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation group: 'com.zendesk', name: 'messaging', version: '5.2.2'
-    implementation group: 'com.zendesk', name: 'support', version: '4.0.0'
-    implementation group: 'com.zendesk', name: 'chat', version: '3.3.2'
+    api group: 'com.zendesk', name: 'messaging', version: '5.2.2'
+    api group: 'com.zendesk', name: 'support', version: '5.0.5'
+    api group: 'com.zendesk', name: 'answerbot', version: '3.0.4'
+    api group: 'com.zendesk', name: 'chat', version: '3.3.2'
+    //MARK: for linter on local machine only
+//    api "io.flutter:flutter_embedding_debug:1.0.0-d3ea636dc5d16b56819f3266241e1f708979c233"
 }

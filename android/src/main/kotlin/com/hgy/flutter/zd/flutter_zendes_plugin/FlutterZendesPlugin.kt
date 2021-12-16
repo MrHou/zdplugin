@@ -1,20 +1,24 @@
 package com.hgy.flutter.zd.flutter_zendes_plugin
 
+//import io.flutter.plugin.common.PluginRegistry.Registrar
+
 import android.app.Activity
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.NonNull
 import com.zendesk.logger.Logger
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import zendesk.answerbot.AnswerBot
 import zendesk.chat.*
 import zendesk.configurations.Configuration
-import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.JwtIdentity
 import zendesk.core.Zendesk
@@ -60,7 +64,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     override fun onDetachedFromActivityForConfigChanges() {
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
@@ -90,10 +94,12 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 )
                 //2.Support SDK init
                 Support.INSTANCE.init(Zendesk.INSTANCE)
-
+                AnswerBot.INSTANCE.init(Zendesk.INSTANCE, Support.INSTANCE);
                 //3.setIdentity
+
                 val identity: Identity = JwtIdentity(jwtToken)
                 Zendesk.INSTANCE.setIdentity(identity)
+//                Zendesk.INSTANCE.setIdentity(AnonymousIdentity())
 
                 //4.Chat SDK
                 Chat.INSTANCE.init(activity, accountKey)
@@ -109,6 +115,9 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 val departmentName = call.argument<String>("departmentName") ?: ""
                 //MARK: now we don't have bot image from, only from platform
                 val botAvatar = call.argument<Int>("botAvatar") ?: 0//R.drawable.zui_avatar_bot_default
+
+
+                //MARK: et up user info
                 val profileProvider = Chat.INSTANCE.providers()?.profileProvider()
                 val chatProvider = Chat.INSTANCE.providers()?.chatProvider()
 
@@ -120,41 +129,69 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                         .withPhoneNumber(phone)
                         .build()
 
-                profileProvider?.setVisitorInfo(visitorInfo, null)
-                profileProvider?.setVisitorNote("Name : $name , Phone: $phone")
-//                chatProvider?.setDepartment(departmentName, null)
-
-//                Chat.INSTANCE.providers()?.connectionProvider()?.observeConnectionStatus(ObservationScope(), object : Observer<ConnectionStatus> {
-//                   override  fun update(connectionStatus: ConnectionStatus) {
-//                        if (connectionStatus == ConnectionStatus.CONNECTED) {
-//                            profileProvider?.setVisitorInfo(visitorInfo, null)
-//                        }
+//                chatProvider?.sendOfflineForm(OfflineForm.builder("Offline Form message").withVisitorInfo(visitorInfo).build(), object: ZendeskCallback<Void>(){
+//                    override fun onSuccess(p0: Void?) {
+//                        Log.e("ZendeskSetInfo", "success set up offlineform")
 //                    }
+//
+//                    override fun onError(p0: ErrorResponse?) {
+//                        Log.e("ZendeskSetInfo", "error set up offlineform: ${p0.toString()}")
+//                    }
+//
 //                })
-                val chatConfigurationBuilder = ChatConfiguration.builder();
+                profileProvider?.setVisitorInfo(visitorInfo,null)
+                profileProvider?.setVisitorNote("android, name : $name , phone: $phone, email: $email")
+                val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
+                    .withVisitorInfo(visitorInfo)
+//                    .withDepartment("Department Name")
+                    .build()
+                Chat.INSTANCE.setChatProvidersConfiguration(chatProvidersConfiguration)
+
+////                chatProvider?.setDepartment(departmentName, null)
+//                var observationScope = ObservationScope()
+//                Chat.INSTANCE.providers()?.chatProvider()?.observeChatState(ObservationScope(), object : Observer<ChatState> {
+//                   override  fun update(connectionStatus: ChatState) {
+//                       Log.e("ZendeskSetInfo", "connection status ${connectionStatus.chatId}")
+//                       if (connectionStatus.getChatSessionStatus() == ChatSessionStatus.STARTED) {
+//                          // Clean things up to avoid confusion.
+//                           Chat.INSTANCE.providers()?.profileProvider()?.setVisitorInfo(visitorInfo, null)
+//                           observationScope.cancel();
+//                       }
+//                   }
+//                })
+
+                //MARK: chat config
+                val chatConfigurationBuilder = ChatConfiguration.builder()
                 chatConfigurationBuilder
+                    .withPreChatFormEnabled(false)
                     //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
                     .withAgentAvailabilityEnabled(true)
                     //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
                     .withTranscriptEnabled(true)
-                    //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-                    .withPreChatFormEnabled(false)
                     .withOfflineFormEnabled(true)
-                    .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
-                    .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
-                    .withPhoneFieldStatus(PreChatFormFieldStatus.OPTIONAL)
-                    .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
+                    .withNameFieldStatus(PreChatFormFieldStatus.HIDDEN)
+                    .withEmailFieldStatus(PreChatFormFieldStatus.HIDDEN)
+                    .withPhoneFieldStatus(PreChatFormFieldStatus.HIDDEN)
+                    .withDepartmentFieldStatus(PreChatFormFieldStatus.HIDDEN)
+
                 if (!endChatSwitch) {
                     chatConfigurationBuilder.withChatMenuActions(ChatMenuAction.CHAT_TRANSCRIPT)
                 }
-                val chatConfiguration = chatConfigurationBuilder.build();
+                val chatConfiguration = chatConfigurationBuilder.build()
+
+                val requestConfiguration = RequestActivity.builder() // set its properties
+                    .withRequestId(email)
+                    .config()
+
+                val chatEngine = ChatEngine.engine()
 
                 MessagingActivity.builder()
                     .withBotLabelString(botLabel)
                     .withBotAvatarDrawable(botAvatar)
                     .withToolbarTitle(toolbarTitle)
-                    .withEngines(ChatEngine.engine())
-                    .show(activity, chatConfiguration)
+                    .withEngines(chatEngine)
+                    .show(activity, requestConfiguration, chatConfiguration)
 
             }
             "helpCenter" -> {
@@ -183,9 +220,20 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             "changeNavStatus" -> {
 
             }
+            "resetIdentity" -> {
+                Chat.INSTANCE.resetIdentity()
+//                Chat.INSTANCE.clearCache()
+                result.success(true)
+//                Chat.INSTANCE.resetIdentity { r ->
+//                    Log.d("ZendeskSetInfo", "resetet indentity result ${r.toString()}")
+//                    result.success(true)
+//                } // Identity cleared, continue to log ou
+
+            }
             else -> {
                 result.notImplemented()
             }
         }
     }
+
 }

@@ -56,6 +56,10 @@ class FlutterZendeskPlugin {
     });
   }
 
+  Future<bool> resetIdentity() async {
+    return await _channel.invokeMethod('resetIdentity', <String, dynamic>{});
+  }
+
   Future<dynamic> startChatV1() async {
     return await _channel.invokeMethod('startChatV1');
   }
