@@ -48,6 +48,7 @@ struct ZendeskNavigationView: View {
                 content
                     .hideNavigationBar()
             )
+            
     }
     
     var content: some View{
@@ -56,7 +57,7 @@ struct ZendeskNavigationView: View {
                 
                 VStack{
                     Spacer()
-                        .frame(height: 25)
+                        .frame(height: 15)
                     
                     HStack{
                         
@@ -80,7 +81,7 @@ struct ZendeskNavigationView: View {
                         
                         Spacer()
                             .frame(width: 15)
-                            .padding(.trailing, 15)
+                            .padding(.trailing, 20)
                         
                     }
                     Spacer()
@@ -88,7 +89,11 @@ struct ZendeskNavigationView: View {
                 }
                 .frame(width: geometry.size.width, height: 50, alignment: .top)
                 .background(toolbarColor)
+                .compositingGroup()
+                .shadow(color: Color.gray.opacity(0.3),radius: 2, x:0, y:3)
                 
+                Spacer()
+                    .frame(height: 6)
                 
                 ZendeskControllerWrapper(withViewController: withViewController)
                     .ignoresSafeArea(.keyboard)
