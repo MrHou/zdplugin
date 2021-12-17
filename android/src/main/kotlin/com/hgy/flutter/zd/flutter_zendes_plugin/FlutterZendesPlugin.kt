@@ -2,7 +2,9 @@ package com.hgy.flutter.zd.flutter_zendes_plugin
 
 //import io.flutter.plugin.common.PluginRegistry.Registrar
 
+import android.R.attr.key
 import android.app.Activity
+import android.app.PendingIntent
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.NonNull
@@ -19,6 +21,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import zendesk.answerbot.AnswerBot
 import zendesk.chat.*
 import zendesk.configurations.Configuration
+import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.JwtIdentity
 import zendesk.core.Zendesk
@@ -71,6 +74,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             }
             "init" -> {
                 Logger.setLoggable(BuildConfig.DEBUG)
+                Logger.setLoggable(true)
                 val accountKey = call.argument<String>("accountKey") ?: ""
                 val applicationId = call.argument<String>("applicationId") ?: ""
                 val clientId = call.argument<String>("clientId") ?: ""
@@ -94,15 +98,21 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 )
                 //2.Support SDK init
                 Support.INSTANCE.init(Zendesk.INSTANCE)
-                AnswerBot.INSTANCE.init(Zendesk.INSTANCE, Support.INSTANCE);
+//                AnswerBot.INSTANCE.init(Zendesk.INSTANCE, Support.INSTANCE);
                 //3.setIdentity
 
                 val identity: Identity = JwtIdentity(jwtToken)
                 Zendesk.INSTANCE.setIdentity(identity)
-//                Zendesk.INSTANCE.setIdentity(AnonymousIdentity())
+//                Zendesk.INSTANCE.setIdentity(AnonymousIdentity
+//                    .Builder()
+//                    .withEmailIdentifier("testtest@test.com")
+//                    .withNameIdentifier("Dmytro diachenko")
+//                    .build()
+//                )
 
                 //4.Chat SDK
-                Chat.INSTANCE.init(activity, accountKey)
+                Chat.INSTANCE.init(activity, accountKey,applicationId)
+
                 result.success(true)
             }
             "startChatV2" -> {
@@ -129,7 +139,21 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                         .withPhoneNumber(phone)
                         .build()
 
-//                chatProvider?.sendOfflineForm(OfflineForm.builder("Offline Form message").withVisitorInfo(visitorInfo).build(), object: ZendeskCallback<Void>(){
+                val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
+                    .withVisitorInfo(visitorInfo)
+                    .withDepartment(departmentName)
+                    .build()
+                Chat.INSTANCE.chatProvidersConfiguration=chatProvidersConfiguration
+                profileProvider?.setVisitorInfo(visitorInfo,null)
+                profileProvider?.setVisitorNote("android, name : $name , phone: $phone, email: $email")
+
+                //MARK: additional settings functional/ remove after 1.0.7 Jasper version
+//                val offlineFormBuilder = OfflineForm
+//                    .builder("Offline Form message")
+//                    .withVisitorInfo(visitorInfo)
+//
+//                    .build()
+//                chatProvider?.sendOfflineForm(offlineFormBuilder, object: ZendeskCallback<Void>(){
 //                    override fun onSuccess(p0: Void?) {
 //                        Log.e("ZendeskSetInfo", "success set up offlineform")
 //                    }
@@ -139,27 +163,37 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 //                    }
 //
 //                })
-                profileProvider?.setVisitorInfo(visitorInfo,null)
-                profileProvider?.setVisitorNote("android, name : $name , phone: $phone, email: $email")
-                val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
-                    .withVisitorInfo(visitorInfo)
-//                    .withDepartment("Department Name")
-                    .build()
-                Chat.INSTANCE.setChatProvidersConfiguration(chatProvidersConfiguration)
 
-////                chatProvider?.setDepartment(departmentName, null)
+//                Chat.INSTANCE.providers()?.chatProvider()?.getChatInfo(object :
+//                    ZendeskCallback<ChatInfo>() {
+//                    override fun onSuccess(p0: ChatInfo?) {
+//                        Log.e("ZendeskSetInfo", "chat info ${p0?.isChatting}")
+//                    }
+//
+//                    override fun onError(p0: ErrorResponse?) {
+//                        Log.e("ZendeskSetInfo", "chat info errro ${p0.toString()}")
+//                    }
+//
+//                })
+
+//                chatProvider?.setDepartment("Support", null)
+//                var visitorInfoSet = false
 //                var observationScope = ObservationScope()
 //                Chat.INSTANCE.providers()?.chatProvider()?.observeChatState(ObservationScope(), object : Observer<ChatState> {
 //                   override  fun update(connectionStatus: ChatState) {
 //                       Log.e("ZendeskSetInfo", "connection status ${connectionStatus.chatId}")
 //                       if (connectionStatus.getChatSessionStatus() == ChatSessionStatus.STARTED) {
-//                          // Clean things up to avoid confusion.
-//                           Chat.INSTANCE.providers()?.profileProvider()?.setVisitorInfo(visitorInfo, null)
-//                           observationScope.cancel();
+//                           if(!visitorInfoSet) {
+//                               // Clean things up to avoid confusion.
+//                               Chat.INSTANCE.providers()?.profileProvider()
+//                                   ?.setVisitorInfo(visitorInfo, null)
+//                               observationScope.cancel()
+//                               visitorInfoSet = true
+//                           }
+//
 //                       }
 //                   }
 //                })
-
                 //MARK: chat config
                 val chatConfigurationBuilder = ChatConfiguration.builder()
                 chatConfigurationBuilder
@@ -170,19 +204,15 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .withTranscriptEnabled(true)
                     .withOfflineFormEnabled(true)
                     //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-                    .withNameFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                    .withEmailFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                    .withPhoneFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                    .withDepartmentFieldStatus(PreChatFormFieldStatus.HIDDEN)
+                    .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withPhoneFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
 
                 if (!endChatSwitch) {
                     chatConfigurationBuilder.withChatMenuActions(ChatMenuAction.CHAT_TRANSCRIPT)
                 }
                 val chatConfiguration = chatConfigurationBuilder.build()
-
-                val requestConfiguration = RequestActivity.builder() // set its properties
-                    .withRequestId(email)
-                    .config()
 
                 val chatEngine = ChatEngine.engine()
 
@@ -191,8 +221,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .withBotAvatarDrawable(botAvatar)
                     .withToolbarTitle(toolbarTitle)
                     .withEngines(chatEngine)
-                    .show(activity, requestConfiguration, chatConfiguration)
-
+                    .show(activity, chatConfiguration)
             }
             "helpCenter" -> {
                 val categoriesCollapsed = call.argument<Boolean>("categoriesCollapsed") ?: false
