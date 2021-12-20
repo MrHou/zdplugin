@@ -222,6 +222,8 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .withToolbarTitle(toolbarTitle)
                     .withEngines(chatEngine)
                     .show(activity, chatConfiguration)
+
+                result.success(true)
             }
             "helpCenter" -> {
                 val categoriesCollapsed = call.argument<Boolean>("categoriesCollapsed") ?: false

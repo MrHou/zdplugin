@@ -90,8 +90,10 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             print(Chat.instance?.profileProvider.visitorInfo);
             do {
                 try startChatV2(botLabel: botLabel, iosToolbarHashColor: iosToolbarHashColor,iosToolbarName: toolbarTitle)
+                result(true)
             } catch let error{
                 print("error:\(error)")
+                result(false)
             }
             
         case "helpCenter":

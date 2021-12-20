@@ -34,7 +34,7 @@ class FlutterZendeskPlugin {
     return result;
   }
 
-  Future<void> startChatV2({
+  Future<bool> startChatV2({
     String? phone,
     String? name,
     String? email,
