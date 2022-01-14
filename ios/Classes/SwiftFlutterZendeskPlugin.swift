@@ -85,7 +85,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let iosToolbarHashColor = dic["iosToolbarHashColor"] as? String ?? "#000000"
             
             self.setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                 print(Chat.instance?.profileProvider.visitorInfo);
                 do {
                     try self.startChatV2(botLabel: botLabel, iosToolbarHashColor: iosToolbarHashColor,iosToolbarName: toolbarTitle)
@@ -230,7 +230,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
         chatConfiguration.isOfflineFormEnabled = false
         //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-        chatConfiguration.isAgentAvailabilityEnabled = true
+        chatConfiguration.isAgentAvailabilityEnabled = false
         //This property allows you to configure the requirements of each of the pre-chat form fields.
         
         chatConfiguration.preChatFormConfiguration = chatFormConfiguration

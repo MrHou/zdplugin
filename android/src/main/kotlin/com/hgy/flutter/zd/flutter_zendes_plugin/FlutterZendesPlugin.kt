@@ -141,7 +141,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
                 val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
                     .withVisitorInfo(visitorInfo)
-                    .withDepartment(departmentName)
+                    .withDepartment(null)
                     .build()
                 Chat.INSTANCE.chatProvidersConfiguration=chatProvidersConfiguration
                 profileProvider?.setVisitorInfo(visitorInfo,null)
