@@ -202,7 +202,7 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                     .withAgentAvailabilityEnabled(true)
                     //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
                     .withTranscriptEnabled(true)
-                    .withOfflineFormEnabled(true)
+                    .withOfflineFormEnabled(false)
                     //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
                     .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
                     .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)

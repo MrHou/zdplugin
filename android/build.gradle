@@ -20,7 +20,7 @@ rootProject.allprojects {
         jcenter()
         maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
         //MARK: for linter on local machine only
-//        maven { url "https://storage.googleapis.com/download.flutter.io"}
+        // maven { url "https://storage.googleapis.com/download.flutter.io"}
     }
 }
 
@@ -50,5 +50,5 @@ dependencies {
     api group: 'com.zendesk', name: 'chat', version: '3.3.2'
 
     //MARK: for linter on local machine only
-//    api "io.flutter:flutter_embedding_debug:1.0.0-d3ea636dc5d16b56819f3266241e1f708979c233"
+    // api "io.flutter:flutter_embedding_debug:1.0.0-d3ea636dc5d16b56819f3266241e1f708979c233"
 }
