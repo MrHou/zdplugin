@@ -56,7 +56,7 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             Support.initialize(withZendesk: Zendesk.instance)
             AnswerBot.initialize(withZendesk: Zendesk.instance, support: Support.instance!)
             
-            let idendity =  Identity.createJwt(token: jwtToken)
+            let idendity = Identity.createJwt(token: jwtToken)
             Zendesk.instance?.setIdentity(idendity)
             //            let identity = Identity.createAnonymous(name: "Dmytro Diachenko", email: "testtest@test.com")
             //            Zendesk.instance?.setIdentity(identity)
@@ -84,16 +84,16 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
             let endChatSwitch = dic["endChatSwitch"] as? String ?? ""
             let iosToolbarHashColor = dic["iosToolbarHashColor"] as? String ?? "#000000"
             
-            
-            
-            setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
-            print(Chat.instance?.profileProvider.visitorInfo);
-            do {
-                try startChatV2(botLabel: botLabel, iosToolbarHashColor: iosToolbarHashColor,iosToolbarName: toolbarTitle)
-                result(true)
-            } catch let error{
-                print("error:\(error)")
-                result(false)
+            self.setVisitorInfo(name: name, email: email, phoneNumber: phone, departmentName: department, tags: [])
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                print(Chat.instance?.profileProvider.visitorInfo);
+                do {
+                    try self.startChatV2(botLabel: botLabel, iosToolbarHashColor: iosToolbarHashColor,iosToolbarName: toolbarTitle)
+                    result(true)
+                } catch let error{
+                    print("error:\(error)")
+                    result(false)
+                }
             }
             
         case "helpCenter":
@@ -151,20 +151,74 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         let chatAPIConfiguration = ChatAPIConfiguration()
         //chatAPIConfiguration.tags = ["support"]
         chatAPIConfiguration.visitorInfo = visitorInfo
-        //        chatAPIConfiguration.department = departmentName
+        chatAPIConfiguration.department = nil
         Chat.instance?.configuration = chatAPIConfiguration
+//        Chat.chatProvider?.sendMessage("")
         
         var token: ChatProvidersSDK.ObservationToken?
         token = Chat.connectionProvider?.observeConnectionStatus { status in
+            print("\n====> observerConnectionStatus: \(status)\n")
             guard status.isConnected else { return }
-            
+
             Chat.profileProvider?.setVisitorInfo(visitorInfo, completion: nil)
             Chat.profileProvider?.setNote("Visitor from Jasper app")
             token?.cancel() // Ensure call only happens once
         }
+        
+        Chat.accountProvider?.getAccount { (result) in
+            print("\n====> getAccount: \(result)\n")
+            switch result {
+            case .success(let account):
+                print("\n====> getAccountStatus: \(account.accountStatus)\n")
+                switch account.accountStatus {
+                case .online:
+                    // There are agents available
+                    // You can then get the departments that have agents available
+                    let onlineDepartments = account.departments?.map { $0.status == .online }
+                    
+                    print("\n====> Online departments: \(onlineDepartments)\n")
+                default:
+                    break
+                }
+            case .failure(let error): break
+                // Something went wrong
+            }
+        }
+        
+        token = Chat.settingsProvider?.observeChatSettings { (settings) in
+            print("\n====> observeChatSettings: \(settings)\n")
+            switch settings.isFileSendingEnabled {
+            case true:
+                break
+            case false:
+                break
+            }
+        }
+        
+        Chat.accountProvider?.observeAccount { (account) in
+            print("\n====> observeAccount: \(account.accountStatus), account: \(account)\n")
+            switch account.accountStatus {
+            case .online:
+                // Agents are available
+                break
+            default:
+                // No agents are available
+                break
+            }
+        }
+        
+        Chat.connectionProvider?.observeConnectionStatus({ s in
+            print("\n====> connections status: \(s)\n")
+        })
+        
+        Chat.chatProvider?.observeChatState { (chatState) in
+             print("\n====> observerChatState: \(chatState)\n")
+        }
+        
+        Chat.connectionProvider?.connect()
     }
     
-    func startChatV2(botLabel:String, iosToolbarHashColor: String,iosToolbarName: String) throws {
+    func startChatV2(botLabel:String, iosToolbarHashColor: String, iosToolbarName: String) throws {
         let chatFormConfiguration = ChatSDK.ChatFormConfiguration(name: .optional, email: .optional, phoneNumber: .optional,department: .optional)
         //
         let chatConfiguration = ChatConfiguration()
@@ -174,9 +228,9 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
         chatConfiguration.isPreChatFormEnabled = false
         //If this flag is enabled (as well as isAgentAvailabilityEnabled) then visitors will be presented with a form allowing them to leave a message if no agents are available. This will create a support ticket. Defaults to true.
-        chatConfiguration.isOfflineFormEnabled = true
+        chatConfiguration.isOfflineFormEnabled = false
         //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-        chatConfiguration.isAgentAvailabilityEnabled = true
+        chatConfiguration.isAgentAvailabilityEnabled = false
         //This property allows you to configure the requirements of each of the pre-chat form fields.
         
         chatConfiguration.preChatFormConfiguration = chatFormConfiguration
@@ -190,18 +244,15 @@ public class SwiftFlutterZendeskPlugin: NSObject, FlutterPlugin {
         //MARK: should be refactored
         CommonTheme.currentTheme.primaryColor = UIColor.black
         
-        
         var viewController = try Messaging.instance.buildUI(engines: [chatEngine], configs: [messagingConfiguration,chatConfiguration])
+        print("MessagigConf: ", messagingConfiguration)
+        print("CHHAT CONF: ", chatConfiguration)
         
         if #available(iOS 14.0, *) {
             viewController = UIHostingController(rootView: ZendeskNavigationView(with: viewController, toolbarHashColor: iosToolbarHashColor, toolbarName: iosToolbarName).body)
         } else {
             
         }
-        
-        Chat.connectionProvider?.observeConnectionStatus({ s in
-            print("connections tstaus: \(s)")
-        })
         
         if let navigationController = UIApplication.shared.keyWindow?.rootViewController as? UINavigationController {
             

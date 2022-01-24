@@ -141,7 +141,6 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
 
                 val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
                     .withVisitorInfo(visitorInfo)
-                    .withDepartment(departmentName)
                     .build()
                 Chat.INSTANCE.chatProvidersConfiguration=chatProvidersConfiguration
                 profileProvider?.setVisitorInfo(visitorInfo,null)
@@ -199,10 +198,10 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
                 chatConfigurationBuilder
                     .withPreChatFormEnabled(false)
                     //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-                    .withAgentAvailabilityEnabled(true)
+                    .withAgentAvailabilityEnabled(false)
                     //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
                     .withTranscriptEnabled(true)
-                    .withOfflineFormEnabled(true)
+                    .withOfflineFormEnabled(false)
                     //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
                     .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
                     .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
