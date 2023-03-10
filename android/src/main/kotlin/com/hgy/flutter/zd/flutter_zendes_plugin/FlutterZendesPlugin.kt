@@ -1,20 +1,29 @@
 package com.hgy.flutter.zd.flutter_zendes_plugin
 
+//import io.flutter.plugin.common.PluginRegistry.Registrar
+
+import android.R.attr.key
 import android.app.Activity
+import android.app.PendingIntent
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.NonNull
 import com.zendesk.logger.Logger
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import zendesk.answerbot.AnswerBot
 import zendesk.chat.*
 import zendesk.configurations.Configuration
 import zendesk.core.AnonymousIdentity
+import zendesk.core.Identity
+import zendesk.core.JwtIdentity
 import zendesk.core.Zendesk
 import zendesk.messaging.MessagingActivity
 import zendesk.support.Support
@@ -28,7 +37,8 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     private lateinit var activity: Activity
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "flutter_zendes_plugin")
+        channel =
+            MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "flutter_zendes_plugin")
         channel.setMethodCallHandler(this);
     }
 
@@ -57,109 +67,197 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
     override fun onDetachedFromActivityForConfigChanges() {
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getPlatformVersion" -> {
                 result.success("Android ${android.os.Build.VERSION.RELEASE}")
             }
             "init" -> {
                 Logger.setLoggable(BuildConfig.DEBUG)
+                Logger.setLoggable(true)
                 val accountKey = call.argument<String>("accountKey") ?: ""
                 val applicationId = call.argument<String>("applicationId") ?: ""
                 val clientId = call.argument<String>("clientId") ?: ""
-                val zendeskUrl = call.argument<String>("domainUrl") ?: ""
-                val nameIdentifier = call.argument<String>("nameIdentifier") ?: "nameIdentifier"
-                val emailIdentifier = call.argument<String>("emailIdentifier") ?: "emailIdentifier"
-                if (TextUtils.isEmpty(accountKey)) {
-                    result.error("ACCOUNT_KEY_NULL", "AccountKey is null !", "AccountKey is null !")
+                val domainUrl = call.argument<String>("domainUrl") ?: ""
+                val jwtToken = call.argument<String>("jwtToken") ?: ""
+                if (TextUtils.isEmpty(domainUrl) || TextUtils.isEmpty(accountKey) || TextUtils.isEmpty(
+                        clientId
+                    ) || TextUtils.isEmpty(applicationId) || TextUtils.isEmpty(jwtToken)
+                ) {
+                    result.success(false)
+//                    result.error("ACCOUNT_KEY_NULL", "AccountKey is null !", "AccountKey is null !")
+                    return;
                 }
+
                 //1.Zendes SDK
-                Zendesk.INSTANCE.init(activity,
-                        zendeskUrl,
-                        applicationId,
-                        clientId)
+                Zendesk.INSTANCE.init(
+                    activity,
+                    domainUrl,
+                    applicationId,
+                    clientId
+                )
                 //2.Support SDK init
                 Support.INSTANCE.init(Zendesk.INSTANCE)
+//                AnswerBot.INSTANCE.init(Zendesk.INSTANCE, Support.INSTANCE);
                 //3.setIdentity
-                Zendesk.INSTANCE.setIdentity(
-                        AnonymousIdentity.Builder()
-                                .withNameIdentifier(nameIdentifier)
-                                .withEmailIdentifier(emailIdentifier)
-                                .build()
-                )
+
+                val identity: Identity = JwtIdentity(jwtToken)
+                Zendesk.INSTANCE.setIdentity(identity)
+//                Zendesk.INSTANCE.setIdentity(AnonymousIdentity
+//                    .Builder()
+//                    .withEmailIdentifier("testtest@test.com")
+//                    .withNameIdentifier("Dmytro diachenko")
+//                    .build()
+//                )
+
                 //4.Chat SDK
-                Chat.INSTANCE.init(activity, accountKey, applicationId)
-                result.success("Init completed!")
+                Chat.INSTANCE.init(activity, accountKey,applicationId)
+
+                result.success(true)
             }
             "startChatV2" -> {
                 val phone = call.argument<String>("phone") ?: ""
                 val email = call.argument<String>("email") ?: ""
                 val name = call.argument<String>("name") ?: ""
-                val botLabel = call.argument<String>("botLabel")
+                val botLabel = call.argument<String>("botLabel") ?: "Jasper"
                 val toolbarTitle = call.argument<String>("toolbarTitle")
                 val endChatSwitch = call.argument<Boolean>("endChatSwitch") ?: true
-                val departmentName = call.argument<String>("departmentName") ?: "Department name"
-                val botAvatar = call.argument<Int>("botAvatar") ?: R.drawable.zui_avatar_bot_default
+                val departmentName = call.argument<String>("departmentName") ?: ""
+                //MARK: now we don't have bot image from, only from platform
+                val botAvatar = call.argument<Int>("botAvatar") ?: 0//R.drawable.zui_avatar_bot_default
+
+
+                //MARK: et up user info
                 val profileProvider = Chat.INSTANCE.providers()?.profileProvider()
                 val chatProvider = Chat.INSTANCE.providers()?.chatProvider()
 
-                var isPre = false;
-                if (TextUtils.isEmpty(phone)) {
-                    isPre = true;
-                }
-                val visitorInfo = VisitorInfo.builder().withName(name).withEmail(email).withPhoneNumber(phone).build()
-                profileProvider?.setVisitorInfo(visitorInfo, null)
-                profileProvider?.setVisitorNote("Name : $name ; Phone: $phone", null)
-                chatProvider?.setDepartment(departmentName, null)
-                val chatConfigurationBuilder = ChatConfiguration.builder();
+                val visitorInfo =
+                    VisitorInfo
+                        .builder()
+                        .withName(name)
+                        .withEmail(email)
+                        .withPhoneNumber(phone)
+                        .build()
+
+                val chatProvidersConfiguration = ChatProvidersConfiguration.builder()
+                    .withVisitorInfo(visitorInfo)
+                    .build()
+                Chat.INSTANCE.chatProvidersConfiguration=chatProvidersConfiguration
+                profileProvider?.setVisitorInfo(visitorInfo,null)
+                profileProvider?.setVisitorNote("android, name : $name , phone: $phone, email: $email")
+
+                //MARK: additional settings functional/ remove after 1.0.7 Jasper version
+//                val offlineFormBuilder = OfflineForm
+//                    .builder("Offline Form message")
+//                    .withVisitorInfo(visitorInfo)
+//
+//                    .build()
+//                chatProvider?.sendOfflineForm(offlineFormBuilder, object: ZendeskCallback<Void>(){
+//                    override fun onSuccess(p0: Void?) {
+//                        Log.e("ZendeskSetInfo", "success set up offlineform")
+//                    }
+//
+//                    override fun onError(p0: ErrorResponse?) {
+//                        Log.e("ZendeskSetInfo", "error set up offlineform: ${p0.toString()}")
+//                    }
+//
+//                })
+
+//                Chat.INSTANCE.providers()?.chatProvider()?.getChatInfo(object :
+//                    ZendeskCallback<ChatInfo>() {
+//                    override fun onSuccess(p0: ChatInfo?) {
+//                        Log.e("ZendeskSetInfo", "chat info ${p0?.isChatting}")
+//                    }
+//
+//                    override fun onError(p0: ErrorResponse?) {
+//                        Log.e("ZendeskSetInfo", "chat info errro ${p0.toString()}")
+//                    }
+//
+//                })
+
+//                chatProvider?.setDepartment("Support", null)
+//                var visitorInfoSet = false
+//                var observationScope = ObservationScope()
+//                Chat.INSTANCE.providers()?.chatProvider()?.observeChatState(ObservationScope(), object : Observer<ChatState> {
+//                   override  fun update(connectionStatus: ChatState) {
+//                       Log.e("ZendeskSetInfo", "connection status ${connectionStatus.chatId}")
+//                       if (connectionStatus.getChatSessionStatus() == ChatSessionStatus.STARTED) {
+//                           if(!visitorInfoSet) {
+//                               // Clean things up to avoid confusion.
+//                               Chat.INSTANCE.providers()?.profileProvider()
+//                                   ?.setVisitorInfo(visitorInfo, null)
+//                               observationScope.cancel()
+//                               visitorInfoSet = true
+//                           }
+//
+//                       }
+//                   }
+//                })
+                //MARK: chat config
+                val chatConfigurationBuilder = ChatConfiguration.builder()
                 chatConfigurationBuilder
-                        //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
-                        .withAgentAvailabilityEnabled(true)
-                        //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
-                        .withTranscriptEnabled(true)
-                        .withOfflineFormEnabled(true)
-                        //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
-                        .withPreChatFormEnabled(isPre)
-                        .withNameFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                        .withEmailFieldStatus(PreChatFormFieldStatus.HIDDEN)
-                        .withPhoneFieldStatus(PreChatFormFieldStatus.REQUIRED)
-                        .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withPreChatFormEnabled(false)
+                    //If true, and no agents are available to serve the visitor, they will be presented with a message letting them know that no agents are available. If it's disabled, visitors will remain in a queue waiting for an agent. Defaults to true.
+                    .withAgentAvailabilityEnabled(false)
+                    //If true, visitors will be prompted at the end of the chat if they wish to receive a chat transcript or not. Defaults to true.
+                    .withTranscriptEnabled(true)
+                    .withOfflineFormEnabled(false)
+                    //If true, visitors are prompted for information in a conversational manner prior to starting the chat. Defaults to true.
+                    .withNameFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withEmailFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withPhoneFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+                    .withDepartmentFieldStatus(PreChatFormFieldStatus.OPTIONAL)
+
                 if (!endChatSwitch) {
                     chatConfigurationBuilder.withChatMenuActions(ChatMenuAction.CHAT_TRANSCRIPT)
                 }
-                val chatConfiguration = chatConfigurationBuilder.build();
+                val chatConfiguration = chatConfigurationBuilder.build()
+
+                val chatEngine = ChatEngine.engine()
 
                 MessagingActivity.builder()
-                        .withBotLabelString(botLabel)
-                        .withBotAvatarDrawable(botAvatar)
-                        .withToolbarTitle(toolbarTitle)
-                        .withEngines(ChatEngine.engine())
-                        .show(activity, chatConfiguration)
+                    .withBotLabelString(botLabel)
+                    .withBotAvatarDrawable(botAvatar)
+                    .withToolbarTitle(toolbarTitle)
+                    .withEngines(chatEngine)
+                    .show(activity, chatConfiguration)
 
+                result.success(true)
             }
             "helpCenter" -> {
                 val categoriesCollapsed = call.argument<Boolean>("categoriesCollapsed") ?: false
                 val contactUsButtonVisible = call.argument<Boolean>("contactUsButtonVisible")
-                        ?: true
-                val showConversationsMenuButton = call.argument<Boolean>("showConversationsMenuButton")
+                    ?: true
+                val showConversationsMenuButton =
+                    call.argument<Boolean>("showConversationsMenuButton")
                         ?: true
                 val helpCenterConfig: Configuration = HelpCenterActivity.builder()
-                        .withCategoriesCollapsed(categoriesCollapsed)
-                        .withContactUsButtonVisible(contactUsButtonVisible)
-                        .withShowConversationsMenuButton(showConversationsMenuButton)
-                        .config()
+                    .withCategoriesCollapsed(categoriesCollapsed)
+                    .withContactUsButtonVisible(contactUsButtonVisible)
+                    .withShowConversationsMenuButton(showConversationsMenuButton)
+                    .config()
                 HelpCenterActivity.builder()
-                        .show(activity, helpCenterConfig)
+                    .show(activity, helpCenterConfig)
             }
             "requestView" -> {
                 RequestActivity.builder()
-                        .show(activity);
+                    .show(activity);
             }
             "requestListView" -> {
                 RequestListActivity.builder()
-                        .show(activity);
+                    .show(activity);
             }
             "changeNavStatus" -> {
+
+            }
+            "resetIdentity" -> {
+                Chat.INSTANCE.resetIdentity()
+//                Chat.INSTANCE.clearCache()
+                result.success(true)
+//                Chat.INSTANCE.resetIdentity { r ->
+//                    Log.d("ZendeskSetInfo", "resetet indentity result ${r.toString()}")
+//                    result.success(true)
+//                } // Identity cleared, continue to log ou
 
             }
             else -> {
@@ -167,4 +265,5 @@ public class FlutterZendesPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
             }
         }
     }
+
 }

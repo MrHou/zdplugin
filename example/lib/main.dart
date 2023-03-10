@@ -15,17 +15,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   String _platformVersion = 'Unknown';
-  String _accountKey = '';
-  String _applicationId = '';
-  String _clientId = '';
-  String _domainUrl = '';
+  String _accountKey = 'swbZZ0fqjxlp0slJRNfBD2qp8FYEDXri';
+  String _applicationId = 'be5a52ed9dbb9f19e38dd4a191b5fa79018c4710dbc5487d';
+  String _clientId = 'mobile_sdk_client_2bb73df48f963be15710';
+  String _domainUrl = 'https://hellojasper.zendesk.com';
   FlutterZendeskPlugin _flutterPlugin = FlutterZendeskPlugin();
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-    //添加生命周期观察者
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -50,12 +49,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         applicationId: _applicationId,
         clientId: _clientId,
         domainUrl: _domainUrl,
-        nameIdentifier: "Grayson Identifier",
-        emailIdentifier: "Grayson@gmail.com",
+        nameIdentifier: "jjqqqq dd",
+        emailIdentifier: "testtest@test.com",
         phone: "123121515",
         name: "HGY iOSsdsd",
-        email: "HGYiOSsdsd@gmail.com",
-        departmentName: "Department Name iOS",
+        email: "testtest@test.com",
+        departmentName: null,
       );
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
@@ -80,46 +79,44 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
         body: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text('Running on: $_platformVersion\n'),
-                Text('Chat status: '),
-                RaisedButton(
-                  onPressed: () async {
-                    await _flutterPlugin.startChatV1();
-                  },
-                  child: Text("Start Chat V1"),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    await _flutterPlugin.startChatV2(
-                        phone: "173****5179",
-                        name: "HGY New",
-                        email: "HGY New@gmail.com",
-                        botLabel: "BR Play Label",
-                        departmentName: " Department Name",
-                        endChatSwitch: false,
-                        toolbarTitle: "Online Service");
-                  },
-                  child: Text("Start Chat V2"),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    await _flutterPlugin.helpCenter().then((value) {
-                    });
-                  },
-                  child: Text("Help Center"),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    await _flutterPlugin.requestListViewAction().then((value) {
-                    });
-                  },
-                  child: Text("Request List"),
-                ),
-              ],
-            )),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text('Running on: $_platformVersion\n'),
+            Text('Chat status: '),
+            RaisedButton(
+              onPressed: () async {
+                await _flutterPlugin.startChatV1();
+              },
+              child: Text("Start Chat V1"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _flutterPlugin.startChatV2(
+                    phone: "17386757655179",
+                    name: "HGY New",
+                    email: "testtest@test.com",
+                    botLabel: "Jasper",
+                    departmentName: null, //"Support",
+                    endChatSwitch: true,
+                    toolbarTitle: "Hey user \$usernme Jasper helloyyyyyy");
+              },
+              child: Text("Zendesk Messaging"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _flutterPlugin.helpCenter().then((value) {});
+              },
+              child: Text("Help Center"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _flutterPlugin.requestListViewAction().then((value) {});
+              },
+              child: Text("Request List"),
+            ),
+          ],
+        )),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             await _flutterPlugin.requestViewAction();

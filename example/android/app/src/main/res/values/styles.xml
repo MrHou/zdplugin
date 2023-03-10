@@ -17,9 +17,9 @@
     </style>
 
     <style name="YourLightTheme1" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">#aa66cc</item>
-        <item name="colorPrimaryDark">#aa66cc</item>
-        <item name="colorAccent">@android:color/holo_purple</item>
+        <item name="colorPrimary">#922C3E</item>
+        <item name="colorPrimaryDark">#922C3E</item>
+        <item name="colorAccent">#922C3E</item>
 
 
     </style>

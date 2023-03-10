@@ -5,53 +5,45 @@ import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 class FlutterZendeskPlugin {
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_zendes_plugin');
+  static const MethodChannel _channel = const MethodChannel('flutter_zendes_plugin');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
+  static Future<String?> get platformVersion async {
+    final String? version = await _channel.invokeMethod('getPlatformVersion');
     debugPrint('version = "$version"');
     return version;
   }
 
-  Future<void> init(String accountKey,
-      {String applicationId,
-      String clientId,
-      String domainUrl,
-      String nameIdentifier,
-      String emailIdentifier,
-      String phone,
-      String name,
-      String email,
-      String departmentName}) async {
-    if (applicationId == null || applicationId.isEmpty) {
+  Future<bool?> init(String accountKey,
+      {required String applicationId,
+      required String jwtToken,
+      required String clientId,
+      required String domainUrl}) async {
+    if (applicationId.isEmpty) {
       PackageInfo pi = await PackageInfo.fromPlatform();
       applicationId = '${pi.appName}, v${pi.version}(${pi.buildNumber})';
     }
     debugPrint('Init with applicationId="$applicationId"');
-    final String result = await _channel.invokeMethod('init', <String, dynamic>{
+    final bool? result = await _channel.invokeMethod('init', <String, dynamic>{
       'accountKey': accountKey,
       'applicationId': applicationId,
       'clientId': clientId,
       'domainUrl': domainUrl,
-      'emailIdentifier': emailIdentifier,
-      'nameIdentifier': nameIdentifier,
-      'phone': phone,
-      'email': email,
-      'name': name,
-      'departmentName': departmentName,
+      'jwtToken': jwtToken
     });
     debugPrint('Init result ="$result"');
+    return result;
   }
 
-  Future<void> startChatV2(
-      {String phone,
-      String name,
-      String email,
-      String botLabel,
-      String toolbarTitle,
-      bool endChatSwitch,
-      String departmentName}) async {
+  Future<bool> startChatV2({
+    String? phone,
+    String? name,
+    String? email,
+    String? botLabel,
+    String? toolbarTitle,
+    bool? endChatSwitch,
+    String? departmentName,
+    String? iosToolbarHashColor,
+  }) async {
     return await _channel.invokeMethod('startChatV2', <String, dynamic>{
       'phone': phone,
       'email': email,
@@ -60,7 +52,12 @@ class FlutterZendeskPlugin {
       'toolbarTitle': toolbarTitle,
       'departmentName': departmentName,
       'endChatSwitch': endChatSwitch,
+      'iosToolbarHashColor': iosToolbarHashColor,
     });
+  }
+
+  Future<bool> resetIdentity() async {
+    return await _channel.invokeMethod('resetIdentity', <String, dynamic>{});
   }
 
   Future<dynamic> startChatV1() async {
@@ -80,7 +77,6 @@ class FlutterZendeskPlugin {
   }
 
   Future<dynamic> changeNavStatusAction(bool isShow) async {
-    return await _channel
-        .invokeMethod('changeNavStatus', <String, dynamic>{'isShow': isShow});
+    return await _channel.invokeMethod('changeNavStatus', <String, dynamic>{'isShow': isShow});
   }
 }

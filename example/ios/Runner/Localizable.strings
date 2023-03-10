@@ -2,7 +2,16 @@
   Localizable.strings
   Runner
 
-  Created by Hgy on 2020/8/20.
+  Created by Dmitry Dyachenko on 30.11.2021.
   
-*/
-"ios.common.ui.title" = "客服";
+
+// MARK: Pre-chat form flow
+
+/* Pre-chat form welcome message shown when a user starts the flow, asking them for their query. */
+"ios.conversation.ui.chat.welcome_message.conversation_start" = "Hi! Welcome to Jasper ​​ \🙌  I\'m here Monday through Friday, 9 AM to 5 PM ET, to be your personal guide. If you have any questions, just reply to this message and I will be with you as soon as possible!";
+
+// MARK: Offline form flow
+
+/* Offline form welcome message informing the user no one is online. This is followed by `offline_form.message_prompt` message asking for more info. */
+"ios.conversation.ui.chat.offline_form.welcome_message" = "Sorry, we aren\'t online at the moment. We will be available from 9-5 EST every weekday. Please leave a message and we will follow up as soon as we are back online. We look forward to supporting you.";
+

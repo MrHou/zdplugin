@@ -1,54 +1,52 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_zendes_plugin (0.0.1):
+  - flutter_zendes_plugin (0.0.3):
     - Flutter
-    - ZDCChat (= 1.4.7)
-    - ZendeskChatSDK (= 2.8.0)
-    - ZendeskSupportSDK (= 5.1.0)
+    - ZendeskAnswerBotSDK
+    - ZendeskChatSDK
+    - ZendeskSupportProvidersSDK
+    - ZendeskSupportSDK
   - package_info (0.0.1):
     - Flutter
-  - ZDCChat (1.4.7):
-    - ZDCChat/API (= 1.4.7)
-    - ZDCChat/Localization (= 1.4.7)
-    - ZDCChat/UI (= 1.4.7)
-  - ZDCChat/API (1.4.7)
-  - ZDCChat/Localization (1.4.7)
-  - ZDCChat/UI (1.4.7):
-    - ZDCChat/API
-  - ZendeskChatProvidersSDK (2.8.0)
-  - ZendeskChatSDK (2.8.0):
-    - ZendeskChatProvidersSDK (~> 2.8.0)
-    - ZendeskMessagingSDK (~> 3.7.0)
-  - ZendeskCommonUISDK (5.1.0):
-    - ZendeskSDKConfigurationsSDK (~> 1.1.6)
-  - ZendeskCoreSDK (2.4.1)
-  - ZendeskMessagingAPISDK (3.7.0):
-    - ZendeskSDKConfigurationsSDK (~> 1.1.6)
-  - ZendeskMessagingSDK (3.7.0):
-    - ZendeskCommonUISDK (~> 5.1.0)
-    - ZendeskMessagingAPISDK (~> 3.7.0)
-  - ZendeskSDKConfigurationsSDK (1.1.6)
-  - ZendeskSupportProvidersSDK (5.1.0):
-    - ZendeskCoreSDK (~> 2.4.1)
-  - ZendeskSupportSDK (5.1.0):
-    - ZendeskMessagingSDK (~> 3.7.0)
-    - ZendeskSupportProvidersSDK (~> 5.1.0)
+  - ZendeskAnswerBotProvidersSDK (2.1.3):
+    - ZendeskSupportProvidersSDK (~> 5.3.0)
+  - ZendeskAnswerBotSDK (2.1.3):
+    - ZendeskAnswerBotProvidersSDK (~> 2.1.3)
+    - ZendeskMessagingSDK (~> 3.8.2)
+  - ZendeskChatProvidersSDK (2.11.2)
+  - ZendeskChatSDK (2.11.2):
+    - ZendeskChatProvidersSDK (= 2.11.2)
+    - ZendeskMessagingSDK (= 3.8.3)
+  - ZendeskCommonUISDK (6.1.2)
+  - ZendeskCoreSDK (2.5.1)
+  - ZendeskMessagingAPISDK (3.8.3):
+    - ZendeskSDKConfigurationsSDK (= 1.1.9)
+  - ZendeskMessagingSDK (3.8.3):
+    - ZendeskCommonUISDK (= 6.1.2)
+    - ZendeskMessagingAPISDK (= 3.8.3)
+  - ZendeskSDKConfigurationsSDK (1.1.9)
+  - ZendeskSupportProvidersSDK (5.3.0):
+    - ZendeskCoreSDK (~> 2.5.1)
+  - ZendeskSupportSDK (5.3.0):
+    - ZendeskMessagingSDK (~> 3.8.2)
+    - ZendeskSupportProvidersSDK (~> 5.3.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_zendes_plugin (from `.symlinks/plugins/flutter_zendes_plugin/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
+  - ZendeskChatProvidersSDK (from `https://github.com/zendesk/chat_providers_sdk_ios.git`)
+  - ZendeskChatSDK (from `https://github.com/zendesk/chat_sdk_ios.git`)
+  - ZendeskCommonUISDK (from `https://github.com/zendesk/commonui_sdk_ios.git`)
+  - ZendeskMessagingAPISDK (from `https://github.com/zendesk/messagingapi_sdk_ios.git`)
+  - ZendeskMessagingSDK (from `https://github.com/zendesk/messaging_sdk_ios.git`)
+  - ZendeskSDKConfigurationsSDK (from `https://github.com/zendesk/sdkconfigurations_sdk_ios.git`)
 
 SPEC REPOS:
   trunk:
-    - ZDCChat
-    - ZendeskChatProvidersSDK
-    - ZendeskChatSDK
-    - ZendeskCommonUISDK
+    - ZendeskAnswerBotProvidersSDK
+    - ZendeskAnswerBotSDK
     - ZendeskCoreSDK
-    - ZendeskMessagingAPISDK
-    - ZendeskMessagingSDK
-    - ZendeskSDKConfigurationsSDK
     - ZendeskSupportProvidersSDK
     - ZendeskSupportSDK
 
@@ -59,22 +57,55 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_zendes_plugin/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
+  ZendeskChatProvidersSDK:
+    :git: https://github.com/zendesk/chat_providers_sdk_ios.git
+  ZendeskChatSDK:
+    :git: https://github.com/zendesk/chat_sdk_ios.git
+  ZendeskCommonUISDK:
+    :git: https://github.com/zendesk/commonui_sdk_ios.git
+  ZendeskMessagingAPISDK:
+    :git: https://github.com/zendesk/messagingapi_sdk_ios.git
+  ZendeskMessagingSDK:
+    :git: https://github.com/zendesk/messaging_sdk_ios.git
+  ZendeskSDKConfigurationsSDK:
+    :git: https://github.com/zendesk/sdkconfigurations_sdk_ios.git
+
+CHECKOUT OPTIONS:
+  ZendeskChatProvidersSDK:
+    :commit: 4774294aa2ade1eb74a8d081514d8f6f209232f3
+    :git: https://github.com/zendesk/chat_providers_sdk_ios.git
+  ZendeskChatSDK:
+    :commit: d3a51e4172a2c2f6ed76f5641e12fb74f4aa47aa
+    :git: https://github.com/zendesk/chat_sdk_ios.git
+  ZendeskCommonUISDK:
+    :commit: 45ef3ab2bbf2efbe73735f67723643495c424ffb
+    :git: https://github.com/zendesk/commonui_sdk_ios.git
+  ZendeskMessagingAPISDK:
+    :commit: 75a4bb9d81bf15de1d4f98f52a4523ce2aacdceb
+    :git: https://github.com/zendesk/messagingapi_sdk_ios.git
+  ZendeskMessagingSDK:
+    :commit: 11121b6dc3e9b3065faa1b6ab2d775b3e3a4ea1e
+    :git: https://github.com/zendesk/messaging_sdk_ios.git
+  ZendeskSDKConfigurationsSDK:
+    :commit: dd8365d28c4885cd916c772db05222acc12c7edf
+    :git: https://github.com/zendesk/sdkconfigurations_sdk_ios.git
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_zendes_plugin: 7dbe3ca54cda342767cd1b37412a843d03b2c5fd
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_zendes_plugin: dfe42abd345a4663cbb1655c972a44c3580e1945
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  ZDCChat: 46e070452e4543fab9f39913210dfff6527081d1
-  ZendeskChatProvidersSDK: 69642e44186cda671bf6a93a98f0db45525bc033
-  ZendeskChatSDK: 207f63e262fa52c82d326b70cc88439b7b48c6da
-  ZendeskCommonUISDK: fff44133c8bf74ef6407c31c7cab56084c58dbf4
-  ZendeskCoreSDK: 2dc9457ae01d024ca02f60f6134ad1ad90136c29
-  ZendeskMessagingAPISDK: 64543aaa24e63a6eefe44d0dd6909e55edfe1cc5
-  ZendeskMessagingSDK: 7b7f4818ce6420f5881d1774115cc5525b2686d2
-  ZendeskSDKConfigurationsSDK: 2fa9413915db85c993f58ad8f7902bea0b6090a5
-  ZendeskSupportProvidersSDK: 209011ffad4cbd256839444571defad1b83006f2
-  ZendeskSupportSDK: 95aea2ab473768d8b01fa837002415fb93f8c3e0
+  ZendeskAnswerBotProvidersSDK: 8ef75d4484f09c324cd93ce2725364d73dbabcf5
+  ZendeskAnswerBotSDK: 5427374afc76811d17ef47db8c20967cee84ee2b
+  ZendeskChatProvidersSDK: 450e0a6f56b8c5c82b21106914818a5a3c094cc5
+  ZendeskChatSDK: db9c0c420542c38d03c4345061d8a0b5ae9cf937
+  ZendeskCommonUISDK: 5f0a83f412e07ae23701f18c412fe783b3249ef5
+  ZendeskCoreSDK: 19a18e5ef2edcb18f4dbc0ea0d12bd31f515712a
+  ZendeskMessagingAPISDK: db91be0c5cb88229d22f0e560ed99ba6e1dce02e
+  ZendeskMessagingSDK: ce2750c0a3dbd40918ea2e2d44dd0dbe34d21bc8
+  ZendeskSDKConfigurationsSDK: f91f54f3b41aa36ffbc43a37af9956752a062055
+  ZendeskSupportProvidersSDK: 2bdf8544f7cd0fd4c002546f5704b813845beb2a
+  ZendeskSupportSDK: 3a8e508ab1d9dd22dc038df6c694466414e037ba
 
-PODFILE CHECKSUM: bd6d236691e800593317bc73d83f7df4b190daf4
+PODFILE CHECKSUM: f86480fdf638a806e76e06b418dbc59ddf440a68
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.2
